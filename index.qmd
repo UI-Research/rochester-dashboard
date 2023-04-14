@@ -1,0 +1,253 @@
+---
+title: "Rochester, NY Dashboard Mock-up"
+format: 
+  html:
+    fig-width: 11.5
+    fig-height: 6
+    toc: true
+    toc_float: true
+self-contained: true
+fig-cap-location: top
+editor: visual
+execute:
+  echo: false
+  message: false
+  warning: false
+  error: false
+
+project:
+  execute-dir: project
+---
+
+Federal COVID-19 pandemic-response packages have provided unprecedented aid to
+state and local governments, including \$800 billion that can be used flexibly
+to promote an inclusive recovery. These resources create an unparalleled
+opportunity for advocates and local decision-makers to ensure federal funds
+reach communities that need them most, close equity gaps exacerbated by the
+pandemic, and address the root causes of inequities. To take advantage of this
+opportunity, local leaders need timely data and evidence to ensure funds are
+used effectively and equitably.
+
+This dashboard tracks the federal recovery funds flowing into the City of
+Rochester and Monroe County that can be used for inclusive recovery efforts. The
+dashboard primarily tracks appropriations, or how much funding the federal
+government has committed to provide local jurisdictions. For a few select
+programs where information is available, the dashboard also explores spending by
+zip code.
+
+```{r setup}
+librarian::shelf(tidyverse, here, urbnthemes)
+set_urbn_defaults(style = "print", base_size = 12)
+
+```
+
+```{r load-data}
+
+data <- 
+  readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") %>% 
+  mutate(allocation = str_remove_all(allocation, '[,$]') %>% as.numeric())
+```
+
+## Total Funding by Policy Area
+
+```{r}
+total <- summarise(data, total = sum(allocation, na.rm = TRUE)) %>% pull() 
+total_fmt <- scales::label_number(scale = 1/1e6, suffix = 'M')(total)
+
+total_spent <-  summarise(data, total_spent = sum(spent, na.rm = TRUE)) %>% pull() 
+total_spent_fmt <-scales::label_number(scale = 1/1e6, suffix = 'M')(total_spent)
+pct_spent <- total_spent / total
+pct_spent_fmt <- scales::label_percent()(pct_spent)
+```
+
+```{r}
+total_allocations <- data %>%
+  summarise(total_allocation = sum(allocation, na.rm = TRUE), .by = 'topic') %>%
+  arrange(desc(total_allocation))
+
+top3 <-
+  total_allocations %>% 
+  slice_max(total_allocation, n = 3) %>% 
+  pull(topic) %>% 
+  str_flatten_comma(", and ")
+
+bottom3 <-
+  total_allocations %>% 
+  slice_min(total_allocation, n = 3) %>% 
+  pull(topic) %>% 
+  str_flatten_comma(", and ")
+```
+
+Overall, `r total_fmt` of funds have been allocated, and `r pct_spent_fmt` have been spent. By
+category, **most** of the funds have been allocated to **`r top3`**, while the **least**
+have been allocated to **`r bottom3`**:
+
+::: panel-tabset
+
+### Allocated
+
+```{r}
+data_reordered <- 
+  data %>%
+  left_join(total_allocations, by = "topic") %>%
+  mutate(topic = reorder(topic, total_allocation)) %>%
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("topic", "geography")) %>%
+  drop_na()
+
+# Plotting the graph
+ggplot(data_reordered, aes(x = topic, y = allocation, fill = geography)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M')) +
+  scale_fill_discrete(guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(x = NULL, y = 'Total allocation')
+```
+
+### Spent
+
+```{r}
+data %>% 
+  summarise(spent = sum(spent, na.rm = TRUE), .by = c("topic", "geography")) %>%
+  mutate(total_spent = sum(spent), .by = 'topic') %>% 
+  mutate(topic = reorder(topic, total_spent)) %>% 
+  ggplot(aes(x = topic, y = spent, fill = geography)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M')) +
+  scale_fill_discrete(guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(x = NULL, y = 'Total allocation')
+
+```
+
+:::
+
+## How Much is Being Spent on an Inclusive Recovery?
+
+Broadly, there are [five building blocks](https://www.urban.org/research/publication/aligning-use-recovery-funds-community-goals-rochester-new-york) of an inclusive recovery:
+
+1.  **Create jobs** for residents hardest hit by the pandemic or who face the
+    greatest barriers to employment
+2.  **Connect residents to jobs** and economic opportunities, including through
+    workforce development, child care, transportation, or broadband
+3.  **Reinvest in disinvested communities** and address long-standing disparities in
+    access to education, capital, economic opportunities, and climate resilience
+4.  **Stabilize housing and expand affordable housing**options for low-income
+    households and housing-insecure renters
+5.  Create opportunities for low-wealth households to **build wealth**.
+
+```{r}
+pct <-
+  data %>% 
+  filter(geography == "Rochester") %>% 
+  group_by(is_building_block = is.na(building_blocks)) %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
+  mutate(total = sum(allocation),
+         pct= allocation / total) %>% 
+  filter(is_building_block == TRUE) %>% 
+  pull(pct) %>% 
+  scales::label_percent()(.)
+```
+
+In the Rochester region, `r pct` of the funding has been allocated towards these
+strategies that promote inclusive recovery and equitable growth:
+
+```{r}
+total_allocations <-
+  data %>% 
+  summarise(total_allocation = sum(allocation, na.rm = TRUE), .by = "building_blocks") %>% 
+  arrange(desc(total_allocation))
+
+data_reordered <- 
+  data %>%
+  mutate(building_blocks = if_else(str_detect(building_blocks, 'Create jobs'), 'Create jobs', building_blocks)) %>% 
+  left_join(total_allocations, by = "building_blocks") %>%
+  mutate(building_blocks = reorder(building_blocks, total_allocation)) %>%
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("building_blocks", "geography")) %>%
+  drop_na()  %>% 
+  mutate(total_allocation = sum(allocation), .by = 'building_blocks') %>% 
+  mutate(building_blocks = reorder(building_blocks, total_allocation))
+
+data_reordered %>% 
+  ggplot(aes(x = building_blocks, y = allocation, fill = geography)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M')) +
+  scale_fill_discrete(guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(x = NULL, y = 'Total Allocation')
+```
+
+## Funding by Rochester Area Community Foundation Priorities
+
+```{r}
+pct <-
+  data %>% 
+  filter(geography == "Rochester") %>% 
+  group_by(is_priority = is.na(racf_categories)) %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
+  mutate(total = sum(allocation),
+         pct = allocation / total) %>% 
+  filter(is_priority == TRUE) %>% 
+  pull(pct) %>% 
+  scales::label_percent()()
+```
+
+
+The Rochester Area Community Foundation's key priorities for investment in the
+region include closing the academic achievement and opportunity gap, fostering
+racial and ethnic understanding and equity, partnering against poverty,
+supporting arts and culture, preserving historic assets, advancing environmental
+justice and sustainability, and promoting successful aging. Overall, `r pct` of the
+Federal funding has been allocated towards these priority areas:
+
+```{r}
+data %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("racf_categories", "geography")) %>% 
+  drop_na() %>% 
+  mutate(total_allocation = sum(allocation), .by = 'racf_categories') %>% 
+  mutate(racf_categories = reorder(racf_categories, total_allocation)) %>% 
+  ggplot(aes(x = racf_categories, y = allocation, fill = geography)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M')) +
+  scale_fill_discrete(guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(x = NULL, y = 'Total Allocation')
+```
+
+## Explore All Programs Funded
+
+```{r}
+library(reactable)
+library(reactablefmtr)
+librarian::shelf(reactable, reactablefmtr, crosstalk)
+
+
+data_shared <- SharedData$new(data %>% select(program, geography, agency, program_description, racf_categories, allocation, spent))
+
+table <- 
+  bscols(
+    widths = c(1.5, 10.5),
+    list(
+      filter_select("geography", "Geography", data_shared, ~geography, multiple = TRUE),
+      filter_select("racf_categories", "Category", data_shared, ~racf_categories, multiple = TRUE)
+    ),
+    reactable(
+      data_shared,
+      defaultPageSize = 5,
+      showSortIcon = FALSE,
+      theme = flatly(),
+      columns = list(
+        program = colDef(name = "Program"),
+        racf_categories = colDef(name = "Categories"),
+        geography = colDef(name = "Jurisdiction"),
+        agency = colDef(name = 'Agency'),
+        program_description = colDef(name = 'Description'),
+        allocation = colDef(name = "Allocation"),
+        spent = colDef(name = "Spent")
+        
+      )
+    )
+  )
+
+table
+
+```
