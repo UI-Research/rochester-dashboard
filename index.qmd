@@ -4,8 +4,9 @@ format:
   html:
     fig-width: 11.5
     fig-height: 6
-    toc: true
-    toc_float: true
+    toc: false
+    toc_float: false
+    page-layout: full
 self-contained: true
 fig-cap-location: top
 editor: visual
