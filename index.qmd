@@ -58,7 +58,7 @@ zip code.
 ```
 
 ```{r setup}
-librarian::shelf(tidyverse, here, urbnthemes, gt)
+librarian::shelf(tidyverse, here, urbnthemes, gt, tablexlsx)
 set_urbn_defaults(style = "print", base_size = 12)
 racf_palette <- c("#D6A123", "#ED0A72", "#D442CF", "#696B4F", "#8FAEBE")
 
@@ -287,15 +287,17 @@ This dashboard was created by the Urban Institute in partnership with and suppor
  
 ```{r}
 data %>%
+    unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>% 
+  mutate(topic = str_replace_all(topic, "; NA", "")) %>% 
+  select(program, program_description, geography, legislation, topic, allocation, spent, agency, source, source_url) %>% 
   downloadthis::download_this(
     output_name = "racf-dashboard-data",
-    output_extension = ".csv",
-    button_label = "Download all the data used in the dashboard (.csv)",
+    output_extension = ".xlsx",
+    button_label = "Download all the data used in the dashboard (.xlsx)",
     button_type = "success",
     has_icon = TRUE,
     icon = "fa fa-save"
   )
-
 
 ```
 
