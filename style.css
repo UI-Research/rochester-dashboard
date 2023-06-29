@@ -25,7 +25,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav> .nav-tabs > .tablist {
   display: inline-table;
-  max-height: 300px;
+  max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
   background: #D6A123;
@@ -164,26 +164,27 @@ a[role=tab] {
   color: #ED0A72
 }
 
+
 @media print{
-  /* remove elements */
+    /* remove elements */
     #TOC, #toc, #header-pinned{
-    display: none;
-}
-.nav-tabs{
-  display: none;
-}
-.exclude{
-  display: none;
-}
-.contentBlock.title{
-  padding-top: 0px;
-}
-.expandContainer{
-  height: fit-content !important;
-  height: -moz-fit-content;
-}
-.expandFull{
-  display: block !important;
-}
+        display: none;
+    }
+    .nav-tabs{
+        display: none;
+    }
+    .exclude{
+        display: none;
+    }
+    .contentBlock.title{
+        padding-top: 0px;
+    }
+    .expandContainer{
+        height: fit-content !important;
+        height: -moz-fit-content;
+    }
+    .expandFull{
+        display: block !important;
+    }
 
 }
