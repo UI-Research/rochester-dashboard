@@ -4,3 +4,9 @@
 .httr-oauth
 .DS_Store
 .docx
+
+/.quarto/
+/_site/
+
+.docx
+/documents/
