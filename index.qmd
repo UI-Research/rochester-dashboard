@@ -1,20 +1,6 @@
 ---
-affiliation: "Urban Institute"
+title: "Rochester Region Federal Funds Dashboard"
 date: today
-format:
-  html:
-    css: www/style.css
-    embed-resources: true
-    standalone: true
-    code-fold: true
-    code-line-numbers: true
-    html-math-method: katex
-    df-print: default
-    toc: false 
-    toc-depth: 3
-    number-sections: false
-    number-depth: 3
-    highlight-style: pygments
 editor_options: 
   chunk_output_type: console
 execute:
@@ -23,8 +9,6 @@ execute:
   warning: false
   error: false
 
-project:
-  execute-dir: project
 ---
 
 ```{r, echo=FALSE, fig.align='center'}
@@ -32,7 +16,7 @@ project:
 knitr::include_graphics(here::here("www", "images", "act-logo.png"), dpi = 800)
 ```
 
-# Rochester Region Federal Funds Dashboard Mockup
+
 
 Federal COVID-19 pandemic-response packages have provided unprecedented aid to
 state and local governments, including \$800 billion that can be used flexibly
@@ -51,14 +35,14 @@ programs where information is available, the dashboard also explores spending by
 zip code.
 
 ```{r}
-# ragg_png = function(..., res = 192) {
-#   ragg::agg_png(..., res = res, units = "in")
-# }
-# knitr::opts_chunk$set(dev = "ragg_png", fig.ext = "png")
+ragg_png = function(..., res = 192) {
+  ragg::agg_png(..., res = res, units = "in")
+}
+knitr::opts_chunk$set(dev = "ragg_png", fig.ext = "png")
 ```
 
 ```{r setup}
-librarian::shelf(tidyverse, here, urbnthemes, gt, tablexlsx)
+librarian::shelf(tidyverse, here, urbnthemes, gt)
 set_urbn_defaults(style = "print", base_size = 12)
 racf_palette <- c("#D6A123", "#ED0A72", "#D442CF", "#696B4F", "#8FAEBE")
 
@@ -133,12 +117,14 @@ ggplot(data_reordered, aes(x = topic, y = allocation, fill = geography)) +
 ## Spent
 
 ```{r}
+
+allocation_topic_order <- distinct(data_reordered, topic) %>% pull()
 data %>% 
   filter(geography == 'Rochester') %>% 
   mutate(geography = paste0(geography, ' City Spending')) %>% 
   summarise(spent = sum(spent, na.rm = TRUE), .by = c("topic", "geography")) %>%
   mutate(total_spent = sum(spent), .by = 'topic') %>% 
-  mutate(topic = reorder(topic, total_spent)) %>% 
+  mutate(topic = factor(topic, levels = rev(allocation_topic_order))) %>% 
   ggplot(aes(x = topic, y = spent, fill = geography)) +
   geom_col() +
   scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
@@ -253,37 +239,74 @@ data %>%
 ## Explore All Programs Funded
 
 ```{r}
+
 data %>% 
   # Should subtopic be included?
-  select(program, program_description, geography, agency, topic, building_blocks, racf_categories, flexible_fund, allocated = allocation, spent, current_as_of) %>% 
-    arrange(desc(allocated)) %>% 
-  unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>% 
-  mutate(topic = str_replace_all(topic, "; NA", "")) %>% 
-  rename_with(~str_to_title(.x) %>% str_replace_all(., "_", " "), everything()) %>%
+  select(
+    program,
+    geography,
+    agency,
+    allocated = allocation,
+    spent,
+    topic,
+    building_blocks,
+    racf_categories,
+    description = program_description,
+    current_as_of
+  ) %>% 
+  arrange(desc(allocated)) %>% 
+  # unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>% 
+  # mutate(topic = str_replace_all(topic, "; NA", "")) %>% 
   gt() %>% 
-  opt_interactive(
+  cols_label_with(
+  fn = ~ janitor::make_clean_names(., case = "title")
+) |>
+  cols_merge(c(topic, building_blocks, racf_categories),
+             pattern = "{1}; <br> {2}; <br> {3}") %>% 
+  tab_style(style = cell_text(stretch = "ultra-condensed",
+                              whitespace = "pre-line"),
+            locations = cells_body(c(program, topic, description))) %>% 
+   cols_width(
+     program ~ px(250),
+     geography ~ px(150),
+     agency ~ px(180),
+     allocated ~ px(110),
+     spent ~ px(110),
+     topic ~ px(175),
+     description ~ px(500),
+     current_as_of ~ px(150)
+   ) %>%
+  fmt_number(c(allocated, spent), decimals = 0) %>% 
+  data_color(columns = allocated, method = "numeric", palette = "Blues") %>% 
+  data_color(columns = spent, method = "numeric", palette = "Greens") %>% 
+    tab_header(
+    title = md("Federal Recovery Funds"),
+    subtitle = "Arranged from largest to smallest program allocation"
+  ) |>
+  opt_align_table_header(align = "left") |>
+  tab_options(heading.padding = px(1)) %>% 
+    tab_footnote(
+    footnote = "Darker colors indicate higher values while lighter colors correspond to lower values.",
+    locations = cells_column_labels(columns = c(allocated, spent))
+  ) %>% 
+    opt_interactive(
     use_resizers = TRUE,
-    use_filters = TRUE,
-    use_compact_mode = TRUE,
     use_highlight = TRUE,
     use_search = TRUE,
-    use_text_wrapping = TRUE
+    use_compact_mode = TRUE,
+    use_text_wrapping = TRUE,
+    use_page_size_select = TRUE,
+    use_filters = TRUE
   ) %>% 
-  cols_width(
-    Program ~ px(150),
-    `Program description` ~ px(250),
-    Geography ~ px(150),
-    Topic ~ px(150)
-  ) %>% 
-  fmt_number(c(Allocated, Spent), decimals = -1) %>% 
-  data_color(columns = c(Allocated, Spent), method = "numeric", palette = "viridis") 
+  tab_options(
+      heading.background.color = racf_palette[1],
+            table.width = px(900))
 ```
-
 
 
 ## About the Dashboard
 
-This dashboard was created by the Urban Institute in partnership with and support from The Rochester Area Community Foundation (RACF) to visualize Monroe County and the City of Rochester’s ARPA spending by policy category, the five building blocks of inclusive recovery, and RACF’s investment priorities. By tracking recovery funding expenditures, this dashboard allows us to monitor public spending by the categories most critical in supporting an inclusive recovery from the COVID-19 pandemic.
+This dashboard was created by the [Urban Institute](https://www.urban.org/) in partnership with and support from [The Rochester Area Community Foundation (RACF)](https://www.racf.org/) to visualize Monroe County and the City of Rochester’s ARPA spending by policy category, the five building blocks of inclusive recovery, and RACF’s investment priorities. By tracking recovery funding expenditures, this dashboard allows us to monitor public spending by the categories most critical in supporting an inclusive recovery from the COVID-19 pandemic.
  
 ```{r}
 data %>%
@@ -303,13 +326,10 @@ data %>%
 
 <br>
 
-For more information about the dashboard, please contact Meg Norris (The Rochester Area community Foundation) or Christina Stacy (Urban Institute).
+For more information about the dashboard, please contact [Meg Norris](mailto:mnorris@racf.org) (The Rochester Area community Foundation) or [Christina Stacy](mailto:cstacy@urban.org) (Urban Institute).
 
-Click For Glossary of Terms
+Click For [Glossary of Terms](glossary.qmd)
 
-
-The code used to create this dashboard can be found on GitHub.
-
-
-
+The code used to create this dashboard can be found on
+[GitHub](https://github.com/UI-Research/rochester-dashboard)
 
