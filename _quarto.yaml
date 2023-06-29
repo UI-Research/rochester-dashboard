@@ -11,8 +11,8 @@ website:
     pinned: true
     left:
       - text: "Home"
-        href: _site/index.html
-      - href: _site/glossary.html
+        href: index.qmd
+      - href: glossary.qmd
 format:
   html:
     include-in-header: header.html
@@ -29,3 +29,5 @@ format:
     number-depth: 3
     highlight-style: pygments
     smooth-scroll: true
+execute:
+  freeze: auto
