@@ -1,3 +1,3 @@
-# Rochester, NY Dashboard Mock-up
+# Rochester Dashboard Mock-up
 
-This is a mockup version of a recovery funds dashboard for Rochester, NY.
+This dashboard is a draft that is undergoing active development. It should not be shared or used for analysis. 
