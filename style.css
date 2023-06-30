@@ -1,189 +1,208 @@
+/* Proxima Nova for body text, tables, charts, and anything small.
+   FreightMacro Pro for headlines and titles
+*/
+
+/* Sets the font family and size for elements with class .container-fluid (usually used for navbar text) */
 .container-fluid {
-  font-family: 'FreightMacro Pro', serif;
+  font-family: 'Proxima Nova', serif;
+  font-size: 1.5em;
 }
 
+/* Sets the font family for body, table, and elements with class .chart */
 body, table, .chart {
-  font-family: 'Proxima Nova', sans-serif;
+  font-family: 'Proxima Nova', sans-serif; /* Sets the font family */
 }
 
+/* Sets the font family, color, font size, and margin for heading elements (h1 to h6) */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'FreightMacro Pro', serif;
-  /* make titles orange */
-  color: #D6A123;
-  margin: 0 0 .5em;
+  font-family: 'FreightMacro Pro', serif; /* Sets the font family */
+  font-size: 1.5em;
+  color: #D6A123; /* Sets the font color to an orange shade */
+  margin: 0 0 .5em; /* Sets the margin around the headings */
 }
 
-/* paragraph styles */
-  p {
-    margin: 0 0 8px 0;
-  }
+/* Sets the margin for paragraph elements */
+p {
+  margin: 0 0 8px 0; /* Sets the margin to 0 on top, 8 pixels on bottom, and 0 on the left and right */
+}
 
+/* Sets the display properties for elements with class .cols */
 .cols {
-  display: flex;
-  gap: 10px;
+  display: flex; /* Makes this element a flexible box container */
+  gap: 10px; /* Sets the gap between the child elements to 10 pixels */
 }
 
-.nav> .nav-tabs > .tablist {
-  display: inline-table;
-  max-height: 500px;
-  min-height: 44px;
-  overflow-y: auto;
-  background: #D6A123;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+/* Styles the tablist inside .nav-tabs which is inside .nav */
+.nav > .nav-tabs > .tablist {
+  display: inline-table; /* The element is displayed as an inline-level table */
+  max-height: 500px; /* Maximum height is 500 pixels */
+  min-height: 44px; /* Minimum height is 44 pixels */
+  overflow-y: auto; /* Adds a scrollbar if the content overflows vertically */
+  background: white;
+  border: 1px solid #ddd; /* Sets border around the element */
+  border-radius: 4px; /* Rounds the corners of the element's border */
 }
 
+/* Styles for the navbar */
 .navbar {
-  display: block;
-  background-color: #D6A123;
-    color: #ffffff;
-    font-weight: bold;
-    font-family: 'Proxima', serif;
+  display: block; /* The element is displayed as a block-level element */
+  background-color: #D6A123; /* Sets background color to an orange shade */
+  color: #ffffff; /* Sets the text color to white */
+  font-weight: bold; /* Sets the font weight to bold */
+  font-family: 'Proxima', serif; /* Sets the font family */
 }
 
+/* Sets the color of text inside the .navbar-brand class inside .navbar-default */
 .navbar-default .navbar-brand {
-  color: #FFFFFF;
+  color: #FFFFFF; /* Sets the text color to white */
 }
 
-.navbar-default .navbar-nav>li>a {
-  color: #FFFFFF;
+/* Sets the color of text inside anchor tags that are children of list items, which are in .navbar-nav within .navbar-default */
+.navbar-default .navbar-nav > li > a {
+  color: #FFFFFF; /* Sets the text color to white */
 }
 
-.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
-  color: #D6A123;
-    background-color: #FFFFFF;
-    font-family: "FreightMacro Pro";
+/* Sets the styles for the active state, focused state and hover state of anchor tags within list items in .navbar-nav within .navbar-default */
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
+  color: #D6A123; /* Sets the text color to an orange shade */
+  background-color: #FFFFFF; /* Sets the background color to white */
+  font-family: "Proxima Nova"; /* Sets the font family */
 }
 
+/* Styles for primary buttons in different states (normal, hover, active, visited) */
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-  background-color: #D6A123 !important;
-    border-radius: 8px !important;
+  background-color: #D6A123 !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
+  border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
 }
 
-.btn-outline-primary, .btn-outline-primary:hover, .btn-outline-primary:active, .btn-outline-primary:visited  {
-  background-color: #D6A123 !important;
-    border-radius: 8px !important;
+/* Styles for primary outlined buttons in different states (normal, hover, active, visited) */
+.btn-outline-primary, .btn-outline-primary:hover, .btn-outline-primary:active, .btn-outline-primary:visited {
+  background-color: #D6A123 !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
+  border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
 }
 
-.color-tabs>.nav-pills>li:nth-of-type(1)>a{
-  color: black;
-  background-color: white;
-  border-radius: 8px !important;
-
+/* Styles for the first anchor tag in a list within .nav-pills inside .color-tabs */
+.color-tabs > .nav-pills > li:nth-of-type(1) > a {
+  color: #ED0A72; /* Sets the text color to black */
+  background-color: white; /* Sets the background color to white */
+  border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
 }
 
-.color-tabs > .nav-pills>li:nth-of-type(1)>a:hover, .color-tabs > .nav-pills>li:nth-of-type(1)>a:focus, .color-tabs > .nav-pills>li:nth-of-type(1).active>a, .color-tabs > .nav-pills>li:nth-of-type(1).active>a:hover, .color-tabs > .nav-pills>li:nth-of-type(1).active>a:focus{
-  color: white;
-  background-color: #ED0A72;
-
+/* Styles for hover, focus and active states of the first anchor tag in a list within .nav-pills inside .color-tabs */
+.color-tabs > .nav-pills > li:nth-of-type(1) > a:hover, .color-tabs > .nav-pills > li:nth-of-type(1) > a:focus, .color-tabs > .nav-pills > li:nth-of-type(1).active > a, .color-tabs > .nav-pills > li:nth-of-type(1).active > a:hover, .color-tabs > .nav-pills > li:nth-of-type(1).active > a:focus {
+  color: white; /* Sets the text color to white */
+  background-color: #ED0A72; /* Sets the background color to a pink shade */
 }
-
-
-
-
 
 /* Global Formats */
+
+/* Sets the font family for elements with class .main-container */
 .main-container {
-    font-family:'FreightMacro Pro', serif;
-  }
-
-.tab-content{
-  margin-bottom: 50px;
+  font-family: 'Proxima Nova', serif; /* Sets the font family */
 }
 
-/* Set color for unvisited links */
+/* Adds margin at the bottom of elements with class .tab-content */
+.tab-content {
+  margin-bottom: 50px; /* Adds 50 pixels margin at the bottom */
+}
+
+/* Sets color for unvisited links */
 a:link {
-  color: #ED0A72;
+  color: #ED0A72; /* Sets the text color to a pink shade */
 }
 
-/* Set color for visited links */
+/* Sets color for visited links */
 a:visited {
-  color: #8FAEBE;
+  color: #8FAEBE; /* Sets the text color to a shade of blue */
 }
 
-/* Set color for links when mouse cursor is over them */
+/* Sets color for links when the mouse cursor is over them */
 a:hover {
-  color: #D442CF;
+  color: #D442CF; /* Sets the text color to a shade of pink */
 }
 
-/* Set color for links at the moment they are clicked */
+/* Sets color for links at the moment they are clicked */
 a:active {
-  color: #D442CF;
+  color: #D442CF; /* Sets the text color to a shade of pink */
 }
 
-/* Header image formatting */
-  #header {
-  padding-top: 12px;
+/* Adds padding at the top of elements with id #header */
+#header {
+  padding-top: 12px; /* Adds 12 pixels of padding at the top */
 }
 
-/* Legend Formatting */
-  .list-group-item.active {
-    background-color: #D6A123;
-      border-color: #D6A123;
-  }
+/* Sets the background color and border color for active .list-group-item elements */
+.list-group-item.active {
+  background-color: #D6A123; /* Sets the background color to an orange shade */
+  border-color: #D6A123; /* Sets the border color to an orange shade */
+}
 
+/* Sets the background color and border color for hovered active .list-group-item elements */
 .list-group-item.active:hover {
-  background-color: #000000;
-    border-color: #000000;
+  background-color: #000000; /* Sets the background color to black */
+  border-color: #000000; /* Sets the border color to black */
 }
 
+/* Sets the border radius for elements with class .tocify */
 .tocify {
-  border-radius: 0;
+  border-radius: 0; /* Removes rounded corners */
 }
-
 /* Button Formatting */
-  .btn {
-    border-radius: 0;
-  }
+/* Sets the border radius for elements with class .btn */
+.btn {
+  border-radius: 0; /* Removes rounded corners */
+}
 
-/*pills formatting*/
-  .nav-pills>li.active>a {
-    background-color: #D6A123;
-  }
+/*pills formatting */
 
-.nav-pills>li.active>a:focus {
-  background-color: #D6A123;
+/* Sets the background color for active anchor tags within a list in .nav-pills */
+.nav-pills > li.active > a {
+  background-color: #D6A123; /* Sets the background color to an orange shade */
+}
+
+/* Sets the background color for focused active anchor tags within a list in .nav-pills */
+.nav-pills > li.active > a:focus {
+  background-color: #D6A123; /* Sets the background color to an orange shade */
+}
+
+/* Sets the color and background color for focused anchor tags within a list in .nav */
+.nav > li > a:focus {
+  color: #ED0A72; /* Sets the text color to a pink shade */
+  background-color: white; /* Sets the background color to white */
 }
 
 
-.nav>li>a:focus {
-  color: #ED0A72;
-  background-color: white;
+/* Sets the background color and text color for hovered anchor tags within a list in .nav */
+.nav > li > a:hover {
+  background-color: #ED0A72; /* Sets the background color to a pink shade */
+  color: white; /* Sets the text color to white */
 }
 
-/* Background color of tabset when hovering */
-.nav>li>a:hover {
-  background-color: #ED0A72;
-  color: white;
-}
-
-
-/* Background color of tabset when hovering */
+/* Sets the text color for anchor tags with role attribute set to tab */
 a[role=tab] {
-  color: #ED0A72
+  color: #ED0A72; /* Sets the text color to a pink shade */
 }
 
+/* Media query for print styling */
+@media print {
+  /* Hide elements with ids #TOC, #toc, #header-pinned and class .nav-tabs, .exclude when printing */
+  #TOC, #toc, #header-pinned, .nav-tabs, .exclude {
+    display: none;
+  }
 
-@media print{
-    /* remove elements */
-    #TOC, #toc, #header-pinned{
-        display: none;
-    }
-    .nav-tabs{
-        display: none;
-    }
-    .exclude{
-        display: none;
-    }
-    .contentBlock.title{
-        padding-top: 0px;
-    }
-    .expandContainer{
-        height: fit-content !important;
-        height: -moz-fit-content;
-    }
-    .expandFull{
-        display: block !important;
-    }
+  /* Remove padding from the top of elements with class .contentBlock.title */
+  .contentBlock.title {
+    padding-top: 0px;
+  }
 
+  /* Set height of elements with class .expandContainer for print */
+  .expandContainer {
+    height: fit-content !important; /* Fit the content's height, !important overrides other conflicting styles */
+    height: -moz-fit-content; /* Fit the content's height, for Mozilla browsers */
+  }
+
+  /* Force display block for elements with class .expandFull */
+  .expandFull {
+    display: block !important; /* Forces the element to be displayed as a block, !important overrides other conflicting styles */
+  }
 }
