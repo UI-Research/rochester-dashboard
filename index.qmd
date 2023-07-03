@@ -239,6 +239,39 @@ data %>%
 ## Explore All Programs Funded
 
 ```{r}
+my_theme <- function(data, ...){
+  data %>%
+    opt_row_striping() %>%
+    opt_all_caps() %>%
+    opt_table_font(
+      font = list(
+        gt::google_font("Lato"),
+        default_fonts()))  %>%
+    #Apply different style to the title
+    tab_style(
+      locations = cells_title(groups = "title"),
+      style     = list(
+        cell_text(weight = "bold", size = 24)
+      )
+    ) %>%
+    tab_options(
+      column_labels.border.top.width = px(5),
+      column_labels.border.top.color = "#FFFFFF",
+      table.border.top.color = "#FFFFFF",
+      table.border.bottom.color = "#FFFFFF",
+      heading.background.color = racf_palette[2],
+      data_row.padding = px(5),
+      source_notes.font.size = 16 ,
+      heading.align = "center",
+      row_group.background.color = '#D0D3D4',
+      quarto.disable_processing = TRUE,
+      table.font.size = "6px",
+      ...)
+}
+
+```
+
+```{r}
 
 data %>% 
   # Should subtopic be included?
@@ -264,7 +297,7 @@ data %>%
   cols_merge(c(topic, building_blocks, racf_categories),
              pattern = "{1}; <br> {2}; <br> {3}") %>% 
   tab_style(style = cell_text(stretch = "ultra-condensed",
-                              whitespace = "pre-line"),
+                              whitespace = "pre-line",),
             locations = cells_body(c(program, topic, description))) %>% 
    cols_width(
      program ~ px(250),
@@ -280,11 +313,18 @@ data %>%
   data_color(columns = allocated, method = "numeric", palette = "Blues") %>% 
   data_color(columns = spent, method = "numeric", palette = "Greens") %>% 
     tab_header(
-    title = md("Federal Recovery Funds"),
+    title = md("**Federal Recovery Funds**"),
     subtitle = "Arranged from largest to smallest program allocation"
   ) |>
+  cols_label(program = md("**Program**"),
+             geography = md("**Geography**"),
+             agency = md("**Agency**"),
+             allocated = md("**Allocated**"), 
+             spent = md("**Spent**"),
+             topic = md("**Topic**"),
+             description = md("**Description**"),
+             current_as_of = md("**Current as of**")) %>% 
   opt_align_table_header(align = "left") |>
-  tab_options(heading.padding = px(1)) %>% 
     tab_footnote(
     footnote = "Darker colors indicate higher values while lighter colors correspond to lower values.",
     locations = cells_column_labels(columns = c(allocated, spent))
@@ -292,15 +332,13 @@ data %>%
     opt_interactive(
     use_resizers = TRUE,
     use_highlight = TRUE,
-    use_search = TRUE,
+    use_search = FALSE,
     use_compact_mode = TRUE,
     use_text_wrapping = TRUE,
     use_page_size_select = TRUE,
     use_filters = TRUE
-  ) %>% 
-  tab_options(
-      heading.background.color = racf_palette[1],
-            table.width = px(900))
+  ) %>%
+  my_theme()
 ```
 
 
