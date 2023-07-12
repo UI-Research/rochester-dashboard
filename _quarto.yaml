@@ -10,7 +10,7 @@ website:
     search: true
     pinned: true
     left:
-      - text: "Home"
+      - text: "Federal Recovery Funds Dashboard"
         href: index.qmd
       - href: glossary.qmd
 format:
