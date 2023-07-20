@@ -21,6 +21,13 @@
     "text": "Total Funding by Policy Area\nOverall, 286M of funds have been allocated to the city of Rochester and Monroe County, and 8% have been reported as spent. By category, most of the funds have been allocated to Community and Economic Development, Infrastructure, and Housing, while the least have been allocated to Operations, Public Safety, and Social Services:\n\nAllocatedSpent"
   },
   {
+    "objectID": "index.html#explore-funding-by-subtopic",
+    "href": "index.html#explore-funding-by-subtopic",
+    "title": "Rochester Region Federal Funds Dashboard",
+    "section": "Explore Funding by Subtopic",
+    "text": "Explore Funding by Subtopic\n\nCommunity and Economic DevelopmentHousingInfrastructureOperationsPublic HealthPublic SafetySocial Services"
+  },
+  {
     "objectID": "index.html#how-much-is-being-spent-on-an-inclusive-recovery",
     "href": "index.html#how-much-is-being-spent-on-an-inclusive-recovery",
     "title": "Rochester Region Federal Funds Dashboard",
@@ -39,13 +46,20 @@
     "href": "index.html#explore-all-programs-funded",
     "title": "Rochester Region Federal Funds Dashboard",
     "section": "Explore All Programs Funded",
-    "text": "Explore All Programs Funded\n\n\n\n\n\n\nFederal Recovery Funds\nArranged from largest to smallest program allocation\n\n\n\n\n\n\n\n1 Darker colors indicate higher values while lighter colors correspond to lower values."
+    "text": "Explore All Programs Funded\n\n\n\n\n\n\nFederal Recovery Funds\nArranged from largest to smallest program allocation"
+  },
+  {
+    "objectID": "index.html#mapping-selected-expenditures",
+    "href": "index.html#mapping-selected-expenditures",
+    "title": "Rochester Region Federal Funds Dashboard",
+    "section": "Mapping Selected Expenditures",
+    "text": "Mapping Selected Expenditures"
   },
   {
     "objectID": "index.html#about-the-dashboard",
     "href": "index.html#about-the-dashboard",
     "title": "Rochester Region Federal Funds Dashboard",
     "section": "About the Dashboard",
-    "text": "About the Dashboard\nThis dashboard was created by the Urban Institute in partnership with and support from The Rochester Area Community Foundation (RACF) to visualize Monroe County and the City of Rochester’s ARPA spending by policy category, the five building blocks of inclusive recovery, and RACF’s investment priorities. By tracking recovery funding expenditures, this dashboard allows us to monitor public spending by the categories most critical in supporting an inclusive recovery from the COVID-19 pandemic.\n\n\n\n Download all the data used in the dashboard (.xlsx)\n\n\n\n\nFor more information about the dashboard, please contact Meg Norris (The Rochester Area community Foundation) or Christina Stacy (Urban Institute).\nClick For Glossary of Terms\nThe code used to create this dashboard can be found on GitHub"
+    "text": "About the Dashboard\nThis dashboard was created by the Urban Institute in partnership with and support from The Rochester Area Community Foundation (RACF) to visualize Monroe County and the City of Rochester’s ARPA spending by policy category, the five building blocks of inclusive recovery, and RACF’s investment priorities. By tracking recovery funding expenditures, this dashboard allows us to monitor public spending by the categories most critical in supporting an inclusive recovery from the COVID-19 pandemic.\n\n\n\n Download all the data used in the dashboard (.xlsx)\n\n\n\n\nFor more information about the dashboard, please contact Meg Norris (The Rochester Area community Foundation) or Christina Stacy (Urban Institute).\nClick For Glossary of Terms\nThe code used to create this dashboard was writen by Manuel Alcalá Kovalski can be found on GitHub"
   }
 ]
