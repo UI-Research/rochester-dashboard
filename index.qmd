@@ -464,6 +464,6 @@ For more information about the dashboard, please contact [Meg Norris](mailto:mno
 
 Click For [Glossary of Terms](glossary.qmd)
 
-The code used to create this dashboard can be found on
+The code used to create this dashboard was writen by [Manuel Alcalá Kovalski](mailto:malcalakovalski@urban.org) can be found on
 [GitHub](https://github.com/UI-Research/rochester-dashboard)
 
