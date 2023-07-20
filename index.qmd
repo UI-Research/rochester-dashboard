@@ -1,5 +1,5 @@
 ---
-title: "How the Rochester Region is Spending Federal Recovery Dollars"
+title: "Rochester Region Federal Funds Dashboard"
 date: today
 editor_options: 
   chunk_output_type: console
@@ -18,7 +18,14 @@ knitr::include_graphics(here::here("www", "images", "act-logo.png"), dpi = 800)
 
 
 
-Federal COVID-19 pandemic-response packages have provided unprecedented aid to state and local governments, including $800 billion that can be used flexibly to promote an inclusive recovery. These resources create an unparalleled opportunity for advocates and local decision-makers to ensure federal funds reach communities that need them most, close equity gaps exacerbated by the pandemic, and address the root causes of inequities. To take advantage of this opportunity, local leaders need timely data and evidence to ensure funds are used effectively and equitably. 
+Federal COVID-19 pandemic-response packages have provided unprecedented aid to
+state and local governments, including \$800 billion that can be used flexibly
+to promote an inclusive recovery. These resources create an unparalleled
+opportunity for advocates and local decision-makers to ensure federal funds
+reach communities that need them most, close equity gaps exacerbated by the
+pandemic, and address the root causes of inequities. To take advantage of this
+opportunity, local leaders need timely data and evidence to ensure funds are
+used effectively and equitably.
 
 This dashboard tracks the federal recovery funds flowing into the City of
 Rochester and Monroe County that can be used for inclusive recovery efforts. The
@@ -26,8 +33,6 @@ dashboard primarily tracks appropriations, or how much funding the federal
 government has committed to provide local jurisdictions. For a few select
 programs where information is available, the dashboard also explores spending by
 zip code.
-
-This dashboard tracks the federal recovery funds flowing into the City of Rochester and Monroe County through the American Rescue Plan State and Local Fiscal Recovery Funds that can be used for inclusive recovery efforts. The dashboard tracks how the City and County have allocated these flexible recovery funds.  
 
 ```{r}
 ragg_png = function(..., res = 192) {
@@ -81,8 +86,8 @@ bottom3 <-
   str_flatten_comma(", and ")
 ```
 
-Overall, `r total_fmt` of funds have been allocated, and `r pct_spent_fmt` have been spent. By
-category, most of the funds have been allocated to **`r top3`**, while the least
+Overall, `r total_fmt` of funds have been allocated to the city of Rochester and Monroe County, and `r pct_spent_fmt` have been reported as spent. By
+category, **most** of the funds have been allocated to **`r top3`**, while the **least**
 have been allocated to **`r bottom3`**:
 
 ::: panel-tabset
@@ -134,17 +139,130 @@ data %>%
 
 :::
 
+## Explore Funding by Subtopic
+
+::: panel-tabset
+
+### Community and Economic Development
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Community and Economic Development")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+### Housing
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Housing")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+### Infrastructure
+
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Infrastructure")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+
+### Operations
+
+```{r}
+```{r}
+data %>% 
+  filter(str_detect(topic, "Operations")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+### Public Health
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Public Health")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+### Public Safety
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Social Services")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+### Social Services
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Social Services")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+
+:::
+
 ## How Much is Being Spent on an Inclusive Recovery?
 
 Broadly, there are [five building blocks](https://www.urban.org/research/publication/aligning-use-recovery-funds-community-goals-rochester-new-york) of an inclusive recovery:
 
-1.  **Create jobs** for residents hardest hit by the pandemic or who face the greatest barriers to employment;
-2.  **Connect residents to jobs and economic opportunities**, including through
-    workforce development, child care, transportation, or broadband;
+1.  **Create jobs** for residents hardest hit by the pandemic or who face the
+    greatest barriers to employment
+2.  **Connect residents to jobs** and economic opportunities, including through
+    workforce development, child care, transportation, or broadband
 3.  **Reinvest in disinvested communities** and address long-standing disparities in
-    access to education, capital, economic opportunities, and climate resilience;
-4.  **Stabilize housing and expand affordable housing** options for low-income
-    households and housing-insecure renters; and
+    access to education, capital, economic opportunities, and climate resilience
+4.  **Stabilize housing and expand affordable housing**options for low-income
+    households and housing-insecure renters
 5.  Create opportunities for low-wealth households to **build wealth**.
 
 ```{r}
@@ -230,42 +348,7 @@ data %>%
   labs(x = NULL, y = 'Total Allocation')
 ```
 
-## Mapping Selected Expenditures
-
 ## Explore All Programs Funded
-
-```{r}
-my_theme <- function(data, ...){
-  data %>%
-    opt_row_striping() %>%
-    opt_all_caps() %>%
-    opt_table_font(
-      font = list(
-        gt::google_font("Lato"),
-        default_fonts()))  %>%
-    #Apply different style to the title
-    tab_style(
-      locations = cells_title(groups = "title"),
-      style     = list(
-        cell_text(weight = "bold", size = 24)
-      )
-    ) %>%
-    tab_options(
-      column_labels.border.top.width = px(5),
-      column_labels.border.top.color = "#FFFFFF",
-      table.border.top.color = "#FFFFFF",
-      table.border.bottom.color = "#FFFFFF",
-      heading.background.color = racf_palette[2],
-      data_row.padding = px(5),
-      source_notes.font.size = 16 ,
-      heading.align = "center",
-      row_group.background.color = '#D0D3D4',
-      quarto.disable_processing = TRUE,
-      table.font.size = "6px",
-      ...)
-}
-
-```
 
 ```{r}
 
@@ -293,7 +376,7 @@ data %>%
   cols_merge(c(topic, building_blocks, racf_categories),
              pattern = "{1}; <br> {2}; <br> {3}") %>% 
   tab_style(style = cell_text(stretch = "ultra-condensed",
-                              whitespace = "pre-line",),
+                              whitespace = "pre-line"),
             locations = cells_body(c(program, topic, description))) %>% 
    cols_width(
      program ~ px(250),
@@ -306,37 +389,54 @@ data %>%
      current_as_of ~ px(150)
    ) %>%
   fmt_number(c(allocated, spent), decimals = 0) %>% 
-  data_color(columns = allocated, method = "numeric", palette = "Blues") %>% 
-  data_color(columns = spent, method = "numeric", palette = "Greens") %>% 
     tab_header(
-    title = md("**Federal Recovery Funds**"),
+    title = md("Federal Recovery Funds"),
     subtitle = "Arranged from largest to smallest program allocation"
   ) |>
-  cols_label(program = md("**Program**"),
-             geography = md("**Geography**"),
-             agency = md("**Agency**"),
-             allocated = md("**Allocated**"), 
-             spent = md("**Spent**"),
-             topic = md("**Topic**"),
-             description = md("**Description**"),
-             current_as_of = md("**Current as of**")) %>% 
   opt_align_table_header(align = "left") |>
-    tab_footnote(
-    footnote = "Darker colors indicate higher values while lighter colors correspond to lower values.",
-    locations = cells_column_labels(columns = c(allocated, spent))
-  ) %>% 
+  tab_options(heading.padding = px(1)) %>% 
     opt_interactive(
     use_resizers = TRUE,
     use_highlight = TRUE,
-    use_search = FALSE,
+    use_search = TRUE,
     use_compact_mode = TRUE,
     use_text_wrapping = TRUE,
     use_page_size_select = TRUE,
     use_filters = TRUE
-  ) %>%
-  my_theme()
+  ) %>% 
+  tab_options(
+      heading.background.color = racf_palette[1],
+            table.width = px(900))
 ```
 
+## Mapping Selected Expenditures
+
+```{r}
+pacman::p_load(sf, mapview)
+
+redlining <- 
+  sf::read_sf("data/data-raw/redlining.geojson.txt") %>%
+  filter(city == 'Rochester', state == 'NY') 
+  
+
+project_locations <-
+  read_csv("data/data-raw/addresses-geocoded.csv") %>% 
+  janitor::clean_names() %>% 
+  filter(longitude != 0) %>% 
+  sf::st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) %>% 
+  st_transform(st_crs(4326)) 
+
+
+# Create the map
+# m <- mapviewOptions(fgb = TRUE) # This will make the base map faster by using a faster background map
+m <- mapview(redlining, zcol = 'holc_grade', map.types = "OpenStreetMap")
+m <- m + mapview(project_locations, zcol = 'type', col.regions = colorRampPalette(c("cyan", "red", "purple", "orange"))) # Use blue to red color scale for project types
+
+```
+
+```{r}
+m
+```
 
 ## About the Dashboard
 
@@ -364,5 +464,6 @@ For more information about the dashboard, please contact [Meg Norris](mailto:mno
 
 Click For [Glossary of Terms](glossary.qmd)
 
-The code used to create this dashboard was writen by [Manuel Alcalá Kovalski](mailto:malcalakovalski@urban.org) and can be found on
-[GitHub](https://github.com/UI-Research/rochester-dashboard).
+The code used to create this dashboard can be found on
+[GitHub](https://github.com/UI-Research/rochester-dashboard)
+
