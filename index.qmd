@@ -139,6 +139,118 @@ data %>%
 
 :::
 
+## Explore Funding by Subtopic
+
+::: panel-tabset
+
+### Community and Economic Development
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Community and Economic Development")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+### Housing
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Housing")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+### Infrastructure
+
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Infrastructure")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+
+### Operations
+
+```{r}
+```{r}
+data %>% 
+  filter(str_detect(topic, "Operations")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+### Public Health
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Public Health")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+### Public Safety
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Social Services")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+### Social Services
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Social Services")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M'),
+                     limits = c(0, 100 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+
+:::
+
 ## How Much is Being Spent on an Inclusive Recovery?
 
 Broadly, there are [five building blocks](https://www.urban.org/research/publication/aligning-use-recovery-funds-community-goals-rochester-new-york) of an inclusive recovery:
@@ -277,18 +389,12 @@ data %>%
      current_as_of ~ px(150)
    ) %>%
   fmt_number(c(allocated, spent), decimals = 0) %>% 
-  data_color(columns = allocated, method = "numeric", palette = "Blues") %>% 
-  data_color(columns = spent, method = "numeric", palette = "Greens") %>% 
     tab_header(
     title = md("Federal Recovery Funds"),
     subtitle = "Arranged from largest to smallest program allocation"
   ) |>
   opt_align_table_header(align = "left") |>
   tab_options(heading.padding = px(1)) %>% 
-    tab_footnote(
-    footnote = "Darker colors indicate higher values while lighter colors correspond to lower values.",
-    locations = cells_column_labels(columns = c(allocated, spent))
-  ) %>% 
     opt_interactive(
     use_resizers = TRUE,
     use_highlight = TRUE,
@@ -303,6 +409,34 @@ data %>%
             table.width = px(900))
 ```
 
+## Mapping Selected Expenditures
+
+```{r}
+pacman::p_load(sf, mapview)
+
+redlining <- 
+  sf::read_sf("data/data-raw/fullDownload.geojson.txt") %>%
+  filter(city == 'Rochester', state == 'NY') 
+  
+
+project_locations <-
+  read_csv("data/addresses-geocoded.csv") %>% 
+  janitor::clean_names() %>% 
+  filter(longitude != 0) %>% 
+  sf::st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) %>% 
+  st_transform(st_crs(4326)) 
+
+
+# Create the map
+# m <- mapviewOptions(fgb = TRUE) # This will make the base map faster by using a faster background map
+m <- mapview(redlining, zcol = 'holc_grade', map.types = "OpenStreetMap")
+m <- m + mapview(project_locations, zcol = 'type', col.regions = colorRampPalette(c("cyan", "red", "purple", "orange"))) # Use blue to red color scale for project types
+
+```
+
+```{r}
+m
+```
 
 ## About the Dashboard
 
