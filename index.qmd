@@ -180,7 +180,6 @@ data %>%
 ### Operations
 
 ```{r}
-```{r}
 data %>% 
   filter(str_detect(topic, "Operations")) %>% 
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
@@ -365,8 +364,10 @@ data %>%
   cols_merge(c(topic, building_blocks, racf_categories),
              pattern = "{1}; <br> {2}; <br> {3}") %>% 
   tab_style(style = cell_text(stretch = "ultra-condensed",
-                              whitespace = "pre-line"),
-            locations = cells_body(c(program, topic, description))) %>% 
+                              whitespace = "pre-line",
+                              size = pct(80)),
+
+            locations = cells_body(c(program:current_as_of))) %>% 
    cols_width(
      program ~ px(250),
      geography ~ px(150),
@@ -418,8 +419,14 @@ project_locations <-
 
 # Create the map
 # m <- mapviewOptions(fgb = TRUE) # This will make the base map faster by using a faster background map
-m <- mapview(redlining, zcol = 'holc_grade', map.types = "OpenStreetMap")
-m <- m + mapview(project_locations, zcol = 'type', col.regions = colorRampPalette(c("cyan", "red", "purple", "orange"))) # Use blue to red color scale for project types
+redlining_palette <- c(palette_urbn_main['green'], palette_urbn_main['cyan'], palette_urbn_main['yellow'], palette_urbn_main['red'])
+m <-
+  mapview(redlining,
+          zcol = 'holc_grade',
+          map.types = "OpenStreetMap",
+          col.regions = colorRampPalette(redlining_palette))
+
+m <- m + mapview(project_locations, zcol = 'type', col.regions = colorRampPalette(racf_palette)) # Use blue to red color scale for project types
 
 ```
 
