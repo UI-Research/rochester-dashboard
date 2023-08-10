@@ -1,5 +1,6 @@
 ---
 title: "Rochester Region Federal Funds Dashboard"
+subtitle: "How the Rochester Region Is Spending Federal Recovery Dollars"
 date: today
 editor_options: 
   chunk_output_type: console
@@ -18,21 +19,9 @@ knitr::include_graphics(here::here("www", "images", "act-logo.png"), dpi = 800)
 
 
 
-Federal COVID-19 pandemic-response packages have provided unprecedented aid to
-state and local governments, including \$800 billion that can be used flexibly
-to promote an inclusive recovery. These resources create an unparalleled
-opportunity for advocates and local decision-makers to ensure federal funds
-reach communities that need them most, close equity gaps exacerbated by the
-pandemic, and address the root causes of inequities. To take advantage of this
-opportunity, local leaders need timely data and evidence to ensure funds are
-used effectively and equitably.
-
-This dashboard tracks the federal recovery funds flowing into the City of
-Rochester and Monroe County that can be used for inclusive recovery efforts. The
-dashboard primarily tracks appropriations, or how much funding the federal
-government has committed to provide local jurisdictions. For a few select
-programs where information is available, the dashboard also explores spending by
-zip code.
+Federal COVID-19 pandemic-response packages have provided unprecedented aid to state and local governments, including $800 billion that can be used flexibly to promote an inclusive recovery. These resources create an unparalleled opportunity for advocates and local decision-makers to ensure federal funds reach communities that need them most, close equity gaps exacerbated by the pandemic, and address the root causes of inequities. To take advantage of this opportunity, local leaders need timely data and evidence to ensure funds are used effectively and equitably. 
+ 
+This dashboard tracks the federal recovery funds flowing into the City of Rochester and Monroe County through the American Rescue Plan State and Local Fiscal Recovery Funds that can be used for inclusive recovery efforts. The dashboard tracks how the City and County have allocated these flexible recovery funds.
 
 ```{r}
 ragg_png = function(..., res = 192) {
