@@ -1,1 +1,1 @@
-Sitemap: https://UI-Research.github.io/rochester-dashboard/sitemap.xml
+Sitemap: https://github.com/UI-Research/rochester-dashboard/sitemap.xml
