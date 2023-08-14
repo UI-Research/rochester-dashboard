@@ -1,7 +1,13 @@
 ---
-title: "Rochester Region Federal Funds Dashboard"
+title: 
+  "![](www/images/act-logo.png){width=6in}
+  <br>
+  Rochester Region Federal Funds Dashboard"
 subtitle: "How the Rochester Region Is Spending Federal Recovery Dollars"
-date: today
+date: 07/03/2023
+date-format: "MMMM D, YYYY"
+language:
+  title-block-published: "Data as of"
 editor_options: 
   chunk_output_type: console
 execute:
@@ -9,12 +15,13 @@ execute:
   message: false
   warning: false
   error: false
+css: style.css
 
 ---
 
 ```{r, echo=FALSE, fig.align='center'}
 #| out-width: 500
-knitr::include_graphics(here::here("www", "images", "act-logo.png"), dpi = 800)
+# knitr::include_graphics(here::here("www", "images", "act-logo.png"), dpi = 800)
 ```
 
 
@@ -107,7 +114,13 @@ ggplot(data_reordered, aes(x = topic, y = allocation, fill = geography)) +
 
 ```{r}
 
-allocation_topic_order <- distinct(data_reordered, topic) %>% pull()
+allocation_topic_order <-
+  data_reordered %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = 'topic') %>% 
+  arrange(desc(allocation)) %>% 
+  distinct(topic) %>% 
+  pull()
+
 data %>% 
   filter(geography == 'Rochester') %>% 
   mutate(geography = paste0(geography, ' City Spending')) %>% 
@@ -130,6 +143,8 @@ data %>%
 
 ## Explore Funding by Subtopic
 
+By subtopic, most of the money allocated to community and economic development has gone to workforce development, while most of the money for infrastructure has been allocated to water projects:
+
 ::: panel-tabset
 
 ### Community and Economic Development
@@ -137,20 +152,6 @@ data %>%
 ```{r}
 data %>% 
   filter(str_detect(topic, "Community and Economic Development")) %>% 
-  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
-  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
-    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
-                     limits = c(0, 50 * 1e6)) +
-  coord_flip() +
-  scale_fill_manual(values = racf_palette)
-```
-
-### Housing
-
-```{r}
-data %>% 
-  filter(str_detect(topic, "Housing")) %>% 
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
   ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
   geom_col() +
@@ -177,11 +178,11 @@ data %>%
 
 
 
-### Operations
+### Housing
 
 ```{r}
 data %>% 
-  filter(str_detect(topic, "Operations")) %>% 
+  filter(str_detect(topic, "Housing")) %>% 
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
   ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
   geom_col() +
@@ -197,20 +198,6 @@ data %>%
 ```{r}
 data %>% 
   filter(str_detect(topic, "Public Health")) %>% 
-  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
-  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
-    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
-                     limits = c(0, 50 * 1e6)) +
-  coord_flip() +
-  scale_fill_manual(values = racf_palette)
-```
-
-### Public Safety
-
-```{r}
-data %>% 
-  filter(str_detect(topic, "Social Services")) %>% 
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
   ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
   geom_col() +
@@ -236,6 +223,35 @@ data %>%
 ```
 
 
+### Public Safety
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Social Services")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
+                     limits = c(0, 50 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
+
+
+
+### Operations
+
+```{r}
+data %>% 
+  filter(str_detect(topic, "Operations")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c('subtopic', 'geography')) %>% 
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col() +
+    scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
+                     limits = c(0, 50 * 1e6)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette)
+```
 
 :::
 
@@ -249,7 +265,7 @@ Broadly, there are [five building blocks](https://www.urban.org/research/publica
     workforce development, child care, transportation, or broadband
 3.  **Reinvest in disinvested communities** and address long-standing disparities in
     access to education, capital, economic opportunities, and climate resilience
-4.  **Stabilize housing and expand affordable housing**options for low-income
+4.  **Stabilize housing and expand affordable housing** options for low-income
     households and housing-insecure renters
 5.  Create opportunities for low-wealth households to **build wealth**.
 
@@ -266,8 +282,7 @@ pct <-
   scales::label_percent()(.)
 ```
 
-In the Rochester region, **`r pct`** of the funding has been allocated towards these
-strategies that promote inclusive recovery and equitable growth:
+In the Rochester region, **`r pct`** of the funding has been allocated towards these strategies that promote inclusive recovery and equitable growth, with most inclusive investments going toward reinvesting in disinvested communities, and least going to creating jobs for residents hardest hit by the pandemic or who face the greatest barriers to employment.
 
 ```{r}
 total_allocations <-
@@ -340,7 +355,7 @@ data %>%
 
 ```{r}
 
-data %>% 
+data %>%
   # Should subtopic be included?
   select(
     program,
@@ -353,21 +368,19 @@ data %>%
     racf_categories,
     description = program_description,
     current_as_of
-  ) %>% 
-  arrange(desc(allocated)) %>% 
-  # unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>% 
-  # mutate(topic = str_replace_all(topic, "; NA", "")) %>% 
-  gt() %>% 
+  ) %>%
+  arrange(desc(allocated)) %>%
+  unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>%
+  mutate(topic = str_replace_all(topic, "; NA", "")) %>%
+  gt() %>%
   cols_label_with(
   fn = ~ janitor::make_clean_names(., case = "title")
 ) |>
-  cols_merge(c(topic, building_blocks, racf_categories),
-             pattern = "{1}; <br> {2}; <br> {3}") %>% 
   tab_style(style = cell_text(stretch = "ultra-condensed",
                               whitespace = "pre-line",
                               size = pct(80)),
 
-            locations = cells_body(c(program:current_as_of))) %>% 
+            locations = cells_body(c(program:current_as_of))) %>%
    cols_width(
      program ~ px(250),
      geography ~ px(150),
@@ -378,13 +391,13 @@ data %>%
      description ~ px(500),
      current_as_of ~ px(150)
    ) %>%
-  fmt_number(c(allocated, spent), decimals = 0) %>% 
+  fmt_number(c(allocated, spent), decimals = 0) %>%
     tab_header(
     title = md("Federal Recovery Funds"),
     subtitle = "Arranged from largest to smallest program allocation"
   ) |>
   opt_align_table_header(align = "left") |>
-  tab_options(heading.padding = px(1)) %>% 
+  tab_options(heading.padding = px(1)) %>%
     opt_interactive(
     use_resizers = TRUE,
     use_highlight = TRUE,
@@ -393,11 +406,13 @@ data %>%
     use_text_wrapping = TRUE,
     use_page_size_select = TRUE,
     use_filters = TRUE
-  ) %>% 
+  ) %>%
   tab_options(
       heading.background.color = racf_palette[1],
             table.width = px(900))
 ```
+
+<br>
 
 ## Mapping Selected Expenditures
 
@@ -433,6 +448,8 @@ m <- m + mapview(project_locations, zcol = 'type', col.regions = colorRampPalett
 ```{r}
 m
 ```
+
+<br>
 
 ## About the Dashboard
 
