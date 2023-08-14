@@ -206,3 +206,12 @@ a[role=tab] {
     display: block !important; /* Forces the element to be displayed as a block, !important overrides other conflicting styles */
   }
 }
+
+.quarto-title-block .quarto-title-banner {
+  background-image: url(www/images/act-logo.png);
+  background-size: 300px;
+  background-position: left;
+  background-repeat: no-repeat;
+  padding-left: 10px;
+  background-origin: content-box;
+}
