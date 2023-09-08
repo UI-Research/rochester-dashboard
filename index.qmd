@@ -38,7 +38,8 @@ knitr::opts_chunk$set(dev = "ragg_png", fig.ext = "png")
 ```
 
 ```{r setup}
-librarian::shelf(tidyverse, here, urbnthemes, gt)
+librarian::shelf(tidyverse, here, urbnthemes, gt, tidycensus, mapview)
+options(tigris_use_cache = TRUE)
 set_urbn_defaults(style = "print", base_size = 12)
 racf_palette <- c("#D6A123", "#ED0A72", "#D442CF", "#696B4F", "#8FAEBE")
 
@@ -51,6 +52,72 @@ data <-
   mutate(allocation = str_remove_all(allocation, '[,$]') %>% as.numeric()) %>% 
   mutate(racf_categories = str_to_title(racf_categories))
 ```
+
+## NEW FIGURE PLACEHOLDER
+
+::: panel-tabset
+
+### Total
+
+```{r}
+data %>% 
+  mutate(building_block = if_else(is.na(building_blocks), "Allocated to other programs", "Allocated to a building block")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = "building_block") %>% 
+  # mutate(allocated = scales::label_dollar(scale = 1/1e6, suffix = "M")(allocated),
+  #        total = "") %>% 
+  ungroup() %>% 
+  ggplot(aes(x = "", y = allocated, fill = building_block, label = scales::label_dollar(accuracy = 1, scale = 1/1e6, suffix = "M")(allocated))) +
+  geom_col(position = position_stack(reverse = TRUE), width = 0.4) +
+  geom_text(size = 3, position = position_stack(vjust = 0.5, reverse = TRUE)) +
+  coord_flip() +
+  labs(x = NULL, y = NULL) +
+  scale_y_continuous(labels = scales::label_dollar(scale = 1/1e6, suffix = "M"),
+                     breaks = seq(0, 300 * 1e6, 100*1e6),
+                     limits = c(0, 300*1e6)) +
+  scale_fill_manual(values = racf_palette[c(3, 5)])
+  
+```
+
+### Rochester
+```{r}
+data %>% 
+  filter(geography == "Rochester") %>% 
+  mutate(building_block = if_else(is.na(building_blocks), "Allocated to other programs", "Allocated to a building block")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = "building_block") %>% 
+  ungroup() %>% 
+  ggplot(aes(x = "", y = allocated, fill = building_block, label = scales::label_dollar(scale = 1/1e6, suffix = "M", accuracy = 1)(allocated))) +
+  geom_col(position = position_stack(reverse = TRUE), width = 0.4) +
+  geom_text(size = 3, position = position_stack(vjust = 0.5, reverse = TRUE)) +
+  coord_flip() +
+  labs(x = NULL, y = NULL) +
+  scale_y_continuous(labels = scales::label_dollar(scale = 1/1e6, suffix = "M", accuracy = 1),
+                     breaks = seq(0, 300 * 1e6, 100*1e6),
+                     limits = c(0, 300*1e6)) +
+    scale_fill_manual(values = racf_palette[c(3, 5)])
+  
+```
+
+### Monroe County
+
+```{r}
+data %>% 
+  filter(geography == "Monroe County") %>% 
+  mutate(building_block = if_else(is.na(building_blocks), "Allocated to other programs", "Allocated to a building block")) %>% 
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = "building_block") %>% 
+  ungroup() %>% 
+  ggplot(aes(x = "", y = allocated, fill = building_block, label = scales::label_dollar(scale = 1/1e6, suffix = "M", accuracy = 1)(allocated))) +
+  geom_col(position = position_stack(reverse = TRUE), width = 0.4) +
+  geom_text(size = 3, position = position_stack(vjust = 0.8, reverse = TRUE)) +
+  coord_flip() +
+  labs(x = NULL, y = NULL) +
+  scale_y_continuous(labels = scales::label_dollar(scale = 1/1e6, suffix = "M", accuracy = 1),
+                     breaks = seq(0, 300 * 1e6, 100*1e6),
+                     limits = c(0, 300*1e6)) +
+    scale_fill_manual(values = racf_palette[c(3, 5)])
+  
+```
+
+:::
 
 ## Total Funding by Policy Area
 
@@ -158,7 +225,8 @@ data %>%
     scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
                      limits = c(0, 50 * 1e6)) +
   coord_flip() +
-  scale_fill_manual(values = racf_palette)
+  scale_fill_manual(values = racf_palette) + 
+  labs(x = NULL)
 ```
 
 ### Infrastructure
@@ -173,7 +241,8 @@ data %>%
     scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
                      limits = c(0, 50 * 1e6)) +
   coord_flip() +
-  scale_fill_manual(values = racf_palette)
+  scale_fill_manual(values = racf_palette) +
+  labs(x = NULL)
 ```
 
 
@@ -189,7 +258,8 @@ data %>%
     scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
                      limits = c(0, 50 * 1e6)) +
   coord_flip() +
-  scale_fill_manual(values = racf_palette)
+  scale_fill_manual(values = racf_palette) +
+  labs(x = NULL)
 ```
 
 
@@ -204,7 +274,8 @@ data %>%
     scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
                      limits = c(0, 50 * 1e6)) +
   coord_flip() +
-  scale_fill_manual(values = racf_palette)
+  scale_fill_manual(values = racf_palette) +
+  labs(x = NULL)
 ```
 
 
@@ -219,7 +290,8 @@ data %>%
     scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
                      limits = c(0, 50 * 1e6)) +
   coord_flip() +
-  scale_fill_manual(values = racf_palette)
+  scale_fill_manual(values = racf_palette) + 
+  labs(x = NULL)
 ```
 
 
@@ -234,7 +306,8 @@ data %>%
     scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
                      limits = c(0, 50 * 1e6)) +
   coord_flip() +
-  scale_fill_manual(values = racf_palette)
+  scale_fill_manual(values = racf_palette) +
+  labs(x = NULL)
 ```
 
 
@@ -250,7 +323,8 @@ data %>%
     scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
                      limits = c(0, 50 * 1e6)) +
   coord_flip() +
-  scale_fill_manual(values = racf_palette)
+  scale_fill_manual(values = racf_palette) +
+  labs(x = NULL)
 ```
 
 :::
@@ -273,7 +347,7 @@ Broadly, there are [five building blocks](https://www.urban.org/research/publica
 pct <-
   data %>% 
   filter(geography == "Rochester") %>% 
-  group_by(is_building_block = is.na(building_blocks)) %>% 
+  group_by(is_building_block = !is.na(building_blocks)) %>% 
   summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
   mutate(total = sum(allocation),
          pct= allocation / total) %>% 
@@ -345,6 +419,7 @@ data %>%
   ggplot(aes(x = racf_categories, y = allocation, fill = geography)) +
   geom_col() +
   scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$')) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) +
   scale_fill_discrete(guide = guide_legend(reverse = TRUE)) +
   scale_fill_manual(values = racf_palette) +
   coord_flip() +
@@ -360,18 +435,18 @@ data %>%
   select(
     program,
     geography,
-    agency,
     allocated = allocation,
     spent,
-    topic,
     building_blocks,
-    racf_categories,
+    policy_area = topic,
+    subtopic, 
+    racf_priority = racf_categories,
     description = program_description,
-    current_as_of
+        agency,
   ) %>%
   arrange(desc(allocated)) %>%
-  unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>%
-  mutate(topic = str_replace_all(topic, "; NA", "")) %>%
+  # unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>%
+  # mutate(topic = str_replace_all(topic, "; NA", "")) %>%
   gt() %>%
   cols_label_with(
   fn = ~ janitor::make_clean_names(., case = "title")
@@ -380,18 +455,20 @@ data %>%
                               whitespace = "pre-line",
                               size = pct(80)),
 
-            locations = cells_body(c(program:current_as_of))) %>%
+            locations = cells_body(c(program:agency))) %>%
    cols_width(
      program ~ px(250),
-     geography ~ px(150),
-     agency ~ px(180),
-     allocated ~ px(110),
-     spent ~ px(110),
-     topic ~ px(175),
+     geography ~ px(115),
+     allocated ~ px(100),
+     spent ~ px(100),
+     building_blocks ~ px(110),
+     policy_area ~ px(110), 
+     subtopic ~ px(110),
+     racf_priority ~ px(110),
      description ~ px(500),
-     current_as_of ~ px(150)
+     agency ~ px(180)
    ) %>%
-  fmt_number(c(allocated, spent), decimals = 0) %>%
+  fmt_number(c(allocated, spent), decimals = 2, scale_by = 1/1e6, pattern = "${x}M") %>%
     tab_header(
     title = md("Federal Recovery Funds"),
     subtitle = "Arranged from largest to smallest program allocation"
@@ -416,38 +493,106 @@ data %>%
 
 ## Mapping Selected Expenditures
 
+::: panel-tabset
+### Redlining
+
 ```{r}
-pacman::p_load(sf, mapview)
+pacman::p_load(sf, mapview, tidycensus)
+
 
 redlining <- 
   sf::read_sf("data/data-raw/redlining.geojson.txt") %>%
   filter(city == 'Rochester', state == 'NY') 
   
 
+
+
+spending <- 
+  readxl::read_xlsx("data/data-raw/City of Rochester ARPA capital projects for ACT Rochester.xlsx", sheet = "ARPA spending status",
+                    skip = 2) %>% 
+  janitor::clean_names()
+  
 project_locations <-
   read_csv("data/data-raw/addresses-geocoded.csv") %>% 
   janitor::clean_names() %>% 
   filter(longitude != 0) %>% 
   sf::st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) %>% 
-  st_transform(st_crs(4326)) 
-
-
+  st_transform(st_crs(4326)) %>% 
+  filter(type == "arpa_spending_status") %>% 
+  left_join(spending %>% select(street, arpa_funding), by = c("f_address" = "street"))
 # Create the map
-# m <- mapviewOptions(fgb = TRUE) # This will make the base map faster by using a faster background map
+m <- mapviewOptions(fgb = TRUE) # This will make the base map faster by using a faster background map
 redlining_palette <- c(palette_urbn_main['green'], palette_urbn_main['cyan'], palette_urbn_main['yellow'], palette_urbn_main['red'])
 m <-
   mapview(redlining,
           zcol = 'holc_grade',
-          map.types = "OpenStreetMap",
           col.regions = colorRampPalette(redlining_palette))
 
-m <- m + mapview(project_locations, zcol = 'type', col.regions = colorRampPalette(racf_palette)) # Use blue to red color scale for project types
+m <- m + mapview(project_locations, zcol = 'type', cex = "arpa_funding", col.regions = colorRampPalette(racf_palette)) # Use blue to red color scale for project types
 
 ```
 
 ```{r}
 m
 ```
+
+### % Black
+
+```{r get-race, echo=FALSE, message=FALSE, warning=FALSE,error=FALSE}
+rochester <- 
+  tigris::places("NY", cb = TRUE, year = 2021) %>% 
+  filter(NAME == "Rochester") %>% 
+  st_geometry()
+
+race_vars <- c(
+    black = "B03002_004",
+    hispanic = "B03002_012"
+  ) 
+
+race <- tidycensus::get_acs(
+    geography = "tract",
+    state = "NY",
+    variables = race_vars,
+    summary_var = "B03002_001",
+    year = 2021,
+    geometry = TRUE
+  ) %>%
+  st_filter(rochester, .predicate = st_intersects) %>% 
+ as_tibble() %>% 
+  janitor::clean_names() %>% 
+  select(geoid, total_population = summary_est, race = variable, value = estimate, geometry) %>% 
+  summarise(value = sum(value, na.rm = TRUE),
+            percent = value/ total_population,
+            .by = c("geoid", "race", "total_population", "geometry")) %>% 
+  select(-c(total_population, value)) %>% 
+  pivot_wider(names_from = 'race', values_from = 'percent', names_prefix = "pct_") %>% 
+  st_as_sf()
+
+```
+
+```{r}
+
+  mapview(list(select(race, pct_black), project_locations),
+          zcol = list("pct_black", "type"),
+          cex = list("", "arpa_funding"),
+          layer.name = list("%Black", "Project Locations"),
+          col.regions = list(colorRampPalette(palette_urbn_cyan), colorRampPalette(racf_palette)))
+
+```
+
+### % Hispanic
+
+```{r}
+m <-  mapview(list(select(race, pct_hispanic), project_locations),
+          zcol = list("pct_hispanic", "type"),
+          layer.name = list("%Hispanic", "Project Locations"),
+          cex = list("", "arpa_funding"),
+          col.regions = list(colorRampPalette(palette_urbn_green), colorRampPalette(racf_palette)))
+
+m
+```
+
+:::
 
 <br>
 
@@ -477,6 +622,6 @@ For more information about the dashboard, please contact [Meg Norris](mailto:mno
 
 Click For [Glossary of Terms](glossary.qmd)
 
-The code used to create this dashboard was writen by [Manuel Alcalá Kovalski](mailto:malcalakovalski@urban.org) can be found on
-[GitHub](https://github.com/UI-Research/rochester-dashboard)
+The code used to create this dashboard was writen by [Manuel Alcalá Kovalski](mailto:malcalakovalski@urban.org) and can be found on
+[GitHub](https://github.com/UI-Research/rochester-dashboard).
 
