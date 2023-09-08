@@ -14,6 +14,13 @@
     "text": "Federal COVID-19 pandemic-response packages have provided unprecedented aid to state and local governments, including $800 billion that can be used flexibly to promote an inclusive recovery. These resources create an unparalleled opportunity for advocates and local decision-makers to ensure federal funds reach communities that need them most, close equity gaps exacerbated by the pandemic, and address the root causes of inequities. To take advantage of this opportunity, local leaders need timely data and evidence to ensure funds are used effectively and equitably.\nThis dashboard tracks the federal recovery funds flowing into the City of Rochester and Monroe County through the American Rescue Plan State and Local Fiscal Recovery Funds that can be used for inclusive recovery efforts. The dashboard tracks how the City and County have allocated these flexible recovery funds."
   },
   {
+    "objectID": "index.html#new-figure-placeholder",
+    "href": "index.html#new-figure-placeholder",
+    "title": "  Rochester Region Federal Funds Dashboard",
+    "section": "NEW FIGURE PLACEHOLDER",
+    "text": "NEW FIGURE PLACEHOLDER\n\nTotalRochesterMonroe County"
+  },
+  {
     "objectID": "index.html#total-funding-by-policy-area",
     "href": "index.html#total-funding-by-policy-area",
     "title": "  Rochester Region Federal Funds Dashboard",
@@ -32,7 +39,7 @@
     "href": "index.html#how-much-is-being-spent-on-an-inclusive-recovery",
     "title": "  Rochester Region Federal Funds Dashboard",
     "section": "How Much is Being Spent on an Inclusive Recovery?",
-    "text": "How Much is Being Spent on an Inclusive Recovery?\nBroadly, there are five building blocks of an inclusive recovery:\n\nCreate jobs for residents hardest hit by the pandemic or who face the greatest barriers to employment\nConnect residents to jobs and economic opportunities, including through workforce development, child care, transportation, or broadband\nReinvest in disinvested communities and address long-standing disparities in access to education, capital, economic opportunities, and climate resilience\nStabilize housing and expand affordable housing options for low-income households and housing-insecure renters\nCreate opportunities for low-wealth households to build wealth.\n\nIn the Rochester region, 39% of the funding has been allocated towards these strategies that promote inclusive recovery and equitable growth, with most inclusive investments going toward reinvesting in disinvested communities, and least going to creating jobs for residents hardest hit by the pandemic or who face the greatest barriers to employment."
+    "text": "How Much is Being Spent on an Inclusive Recovery?\nBroadly, there are five building blocks of an inclusive recovery:\n\nCreate jobs for residents hardest hit by the pandemic or who face the greatest barriers to employment\nConnect residents to jobs and economic opportunities, including through workforce development, child care, transportation, or broadband\nReinvest in disinvested communities and address long-standing disparities in access to education, capital, economic opportunities, and climate resilience\nStabilize housing and expand affordable housing options for low-income households and housing-insecure renters\nCreate opportunities for low-wealth households to build wealth.\n\nIn the Rochester region, 61% of the funding has been allocated towards these strategies that promote inclusive recovery and equitable growth, with most inclusive investments going toward reinvesting in disinvested communities, and least going to creating jobs for residents hardest hit by the pandemic or who face the greatest barriers to employment."
   },
   {
     "objectID": "index.html#funding-by-rochester-area-community-foundation-priorities",
@@ -53,13 +60,13 @@
     "href": "index.html#mapping-selected-expenditures",
     "title": "  Rochester Region Federal Funds Dashboard",
     "section": "Mapping Selected Expenditures",
-    "text": "Mapping Selected Expenditures"
+    "text": "Mapping Selected Expenditures\n\nRedlining% Black% Hispanic"
   },
   {
     "objectID": "index.html#about-the-dashboard",
     "href": "index.html#about-the-dashboard",
     "title": "  Rochester Region Federal Funds Dashboard",
     "section": "About the Dashboard",
-    "text": "About the Dashboard\nThis dashboard was created by the Urban Institute in partnership with and support from The Rochester Area Community Foundation (RACF) to visualize Monroe County and the City of Rochester’s ARPA spending by policy category, the five building blocks of inclusive recovery, and RACF’s investment priorities. By tracking recovery funding expenditures, this dashboard allows us to monitor public spending by the categories most critical in supporting an inclusive recovery from the COVID-19 pandemic.\n\n\n\n Download all the data used in the dashboard (.xlsx)\n\n\n\n\nFor more information about the dashboard, please contact Meg Norris (The Rochester Area community Foundation) or Christina Stacy (Urban Institute).\nClick For Glossary of Terms\nThe code used to create this dashboard was writen by Manuel Alcalá Kovalski can be found on GitHub"
+    "text": "About the Dashboard\nThis dashboard was created by the Urban Institute in partnership with and support from The Rochester Area Community Foundation (RACF) to visualize Monroe County and the City of Rochester’s ARPA spending by policy category, the five building blocks of inclusive recovery, and RACF’s investment priorities. By tracking recovery funding expenditures, this dashboard allows us to monitor public spending by the categories most critical in supporting an inclusive recovery from the COVID-19 pandemic.\n\n\n\n Download all the data used in the dashboard (.xlsx)\n\n\n\n\nFor more information about the dashboard, please contact Meg Norris (The Rochester Area community Foundation) or Christina Stacy (Urban Institute).\nClick For Glossary of Terms\nThe code used to create this dashboard was writen by Manuel Alcalá Kovalski and can be found on GitHub."
   }
 ]
