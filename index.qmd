@@ -24,16 +24,6 @@ css: style.css
 # knitr::include_graphics(here::here("www", "images", "act-logo.png"), dpi = 800)
 ```
 
-In response to the economic impacts of the COVID-19 pandemic, the federal government provided unprecedented levels of flexible relief funds to local governments across the country, [including Rochester](https://www.urban.org/sites/default/files/publication/105119/harnessing-federal-funds-for-inclusive-recovery-in-rochester-ny_0.pdf)
-. These federal recovery funds [offer an unparalleled opportunity](https://www.urban.org/research/publication/how-equity-helps-lift-all-boats) to not only stimulate economic recovery from the pandemic, but to also increase equity. To do so, the funds must be used to ensure that everyone, especially historically excluded groups, can benefit from and contribute to economic recovery. [Research](https://www.urban.org/research/publication/inclusive-recovery-us-cities) has demonstrated that cities can recover from economic distress while improving on inclusion and equity. However, this is not a given. Many cities lose ground on either racial or economic inclusion during a recovery by allowing funds to flow to business as usual.  
- 
-To increase transparency in this process, this dashboard shares data on how the City of Rochester and Monroe County allocated and spent a portion of the flexible recovery funds. The dashboard focuses on [State and Local Fiscal Recovery Funds (SLFRF)](https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds#:~:text=The%20Coronavirus%20State%20and%20Local,COVID%2D19%20public%20health%20emergency) provided through the American Rescue Plan Act (ARPA) because they were one of the most flexible funding sources, giving local governments authority to decide how they should be spent. And, they tended to be spent more on longer term recovery efforts than on short term emergency public health response, which was the focus of CARES Act (Coronavirus Aid, Relief, and Economic Security Act) dollars. SLFRF must be obligated by the end of 2024 and spent by the end of 2026. 
- 
-The dashboard starts by showing what percent of the allocations align with the building blocks of an inclusive recovery, which are five strategies for spending that direct funds to support equity and inclusion. As of X date, 61% of the dollars in the City of Rochester and Monroe County were allocated toward programs and initiatives that align with these building blocks. The dashboard then shows more broadly how funds are being spent by policy area and subtopic. Next, it explores how well the allocations align with Rochester Area Community Foundation’s priorities. Finally, it shows how the City of Rochester’s SLFRF capital investments map onto racial characteristics of neighborhoods within the region, as well as how they overlap with the original redlining maps for the city. (Redlining refers to the process in which borrowers are denied access to credit due to the racial composition of their neighborhood.) Finally, at the end of the dashboard is a table showing all of the allocations and their descriptions in detail. 
- 
-Note that this dashboard does not track outcomes from these investments – it only shows where the dollars are flowing. Simply allocating funds toward topics that could increase equity and inclusion does not guarantee that they do so. Future research efforts should closely monitor outcomes and impacts from the recovery dollar investments to ensure that they close equity gaps exacerbated by the pandemic and address the root causes of inequities. 
- 
-
 
 
 ```{r}
@@ -60,6 +50,44 @@ data <-
 ```
 
 
+In response to the economic impacts of the COVID-19 pandemic, the federal government provided unprecedented levels of flexible relief funds to local governments across the country, [including Rochester](https://www.urban.org/sites/default/files/publication/105119/harnessing-federal-funds-for-inclusive-recovery-in-rochester-ny_0.pdf)
+. These federal recovery funds [offer an unparalleled opportunity](https://www.urban.org/research/publication/how-equity-helps-lift-all-boats) to not only stimulate economic recovery from the pandemic, but to also increase equity. To do so, the funds must be used to ensure that everyone, especially historically excluded groups, can benefit from and contribute to economic recovery. [Research](https://www.urban.org/research/publication/inclusive-recovery-us-cities) has demonstrated that cities can recover from economic distress while improving on inclusion and equity. However, this is not a given. Many cities lose ground on either racial or economic inclusion during a recovery by allowing funds to flow to business as usual.  
+ 
+To increase transparency in this process, this dashboard shares data on how the City of Rochester and Monroe County allocated and spent a portion of the flexible recovery funds. The dashboard focuses on [State and Local Fiscal Recovery Funds (SLFRF)](https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds#:~:text=The%20Coronavirus%20State%20and%20Local,COVID%2D19%20public%20health%20emergency) provided through the American Rescue Plan Act (ARPA) because they were one of the most flexible funding sources, giving local governments authority to decide how they should be spent. And, they tended to be spent more on longer term recovery efforts than on short term emergency public health response, which was the focus of CARES Act (Coronavirus Aid, Relief, and Economic Security Act) dollars. SLFRF must be obligated by the end of 2024 and spent by the end of 2026. 
+ 
+The dashboard starts by showing what percent of the allocations align with the building blocks of an inclusive recovery, which are five strategies for spending that direct funds to support equity and inclusion. As of X date, 61% of the dollars in the City of Rochester and Monroe County were allocated toward programs and initiatives that align with these building blocks. The dashboard then shows more broadly how funds are being spent by policy area and subtopic. Next, it explores how well the allocations align with Rochester Area Community Foundation’s priorities. Finally, it shows how the City of Rochester’s SLFRF capital investments map onto racial characteristics of neighborhoods within the region, as well as how they overlap with the original redlining maps for the city. (Redlining refers to the process in which borrowers are denied access to credit due to the racial composition of their neighborhood.) Finally, at the end of the dashboard is a table showing all of the allocations and their descriptions in detail. 
+ 
+Note that this dashboard does not track outcomes from these investments – it only shows where the dollars are flowing. Simply allocating funds toward topics that could increase equity and inclusion does not guarantee that they do so. Future research efforts should closely monitor outcomes and impacts from the recovery dollar investments to ensure that they close equity gaps exacerbated by the pandemic and address the root causes of inequities. 
+ 
+
+## How Much is Being Spent on an Inclusive Recovery?
+
+[Previous work by the Urban Institute](https://www.urban.org/sites/default/files/publication/105290/aligning-the-use-of-recovery-funds-with-community-goals-in-rochester-new-york.pdf) identified five building blocks of an inclusive recovery. These building blocks were created in collaboration with community stakeholders across the country and include: 
+
+1.  **Create jobs** for residents hardest hit by the pandemic or who face the
+    greatest barriers to employment
+2.  **Connect residents to jobs** and economic opportunities, including through
+    workforce development, child care, transportation, or broadband
+3.  **Reinvest in disinvested communities** and address long-standing disparities in
+    access to education, capital, economic opportunities, and climate resilience
+4.  **Stabilize housing and expand affordable housing** options for low-income
+    households and housing-insecure renters
+5.  Create opportunities for low-wealth households to **build wealth**.
+
+```{r}
+pct <-
+  data %>% 
+  filter(geography == "Rochester") %>% 
+  group_by(is_building_block = !is.na(building_blocks)) %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
+  mutate(total = sum(allocation),
+         pct= allocation / total) %>% 
+  filter(is_building_block == TRUE) %>% 
+  pull(pct) %>% 
+  scales::label_percent()(.)
+```
+Across all allocations in the Rochester region, **`r pct`** of the funding has been allocated towards these strategies that promote inclusive recovery and equitable growth. The figure below shows the total amount of funding for Rochester and Monroe County that was allocated to programs that align with these building blocks. 
+
 
 ```{r}
 #| fig-cap: "Source: Urban Institute calculations of data from City of Rochester APRA Reporting Dashboard"
@@ -78,9 +106,9 @@ data %>%
 
     scale_fill_manual(
         values = c("Monroe County.Allocated to a building block" = alpha("#D6A123", 1), 
-                   "Monroe County.Allocated to other programs" = alpha("#D6A123", 0.5),
+                   "Monroe County.Allocated to other programs" = alpha("#d2d2d2", 0.9),
                    "Rochester.Allocated to a building block" = alpha("#ED0A72", 1),
-                   "Rochester.Allocated to other programs" = alpha("#ED0A72", 0.5)),
+                   "Rochester.Allocated to other programs" = alpha("#696969", 0.9)),
         labels = c("Monroe County - Building Block", "Monroe County - Other Programs", "Rochester - Building Block", "Rochester - Other Programs"),
         name = "Allocation"
     ) +
@@ -92,6 +120,47 @@ data %>%
     theme(legend.position = "right") 
 
 ```
+
+## What types of inclusive recovery strategies are supported?
+
+ 
+Out of the funds allocated to programs that align with the five building blocks of an inclusive recovery, the most funding has been allocated to reinvesting in disinvested communities, while the least has been allocated to creating jobs for residents hardest hit by the pandemic or who face the greatest barriers to employment. The figure below shows how that funding is divided among the five building blocks and includes only the funds allocated to programs that align with the building blocks. 
+
+```{r}
+
+total_allocations <-
+  data %>% 
+  summarise(total_allocation = sum(allocation, na.rm = TRUE), .by = "building_blocks") %>% 
+  arrange(desc(total_allocation))
+
+data_reordered <- 
+  data %>%
+  mutate(building_blocks = case_when(
+                                      str_detect(building_blocks, pattern = "Create jobs")  ~ "Create jobs",
+         str_detect(building_blocks, "build wealth") ~ "Build wealth",
+         str_detect(building_blocks, "Stabilize housing") ~ "Stabilize housing",
+         .default = building_blocks)) %>% 
+  left_join(total_allocations, by = "building_blocks") %>%
+  mutate(building_blocks = reorder(building_blocks, total_allocation)) %>%
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("building_blocks", "geography")) %>%
+  drop_na()  %>% 
+  mutate(total_allocation = sum(allocation), .by = 'building_blocks') %>% 
+  mutate(building_blocks = reorder(building_blocks, total_allocation))
+
+data_reordered %>% 
+  ggplot(aes(x = building_blocks, y = allocation, fill = geography)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
+                     limits = c(0, 100 * 1e6),
+                     breaks = seq(0, 100 * 1e6, by = 25 * 1e6)) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) +
+  scale_fill_discrete(guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  scale_fill_manual(values = racf_palette) +
+  labs(x = NULL, y = 'Total Allocation')
+```
+
+
 
 
 ## What policy areas are being funded?
@@ -313,64 +382,6 @@ data %>%
 ```
 
 :::
-
-## How Much is Being Spent on an Inclusive Recovery?
-
-Broadly, there are [five building blocks](https://www.urban.org/research/publication/aligning-use-recovery-funds-community-goals-rochester-new-york) of an inclusive recovery:
-
-1.  **Create jobs** for residents hardest hit by the pandemic or who face the
-    greatest barriers to employment
-2.  **Connect residents to jobs** and economic opportunities, including through
-    workforce development, child care, transportation, or broadband
-3.  **Reinvest in disinvested communities** and address long-standing disparities in
-    access to education, capital, economic opportunities, and climate resilience
-4.  **Stabilize housing and expand affordable housing** options for low-income
-    households and housing-insecure renters
-5.  Create opportunities for low-wealth households to **build wealth**.
-
-```{r}
-pct <-
-  data %>% 
-  filter(geography == "Rochester") %>% 
-  group_by(is_building_block = !is.na(building_blocks)) %>% 
-  summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
-  mutate(total = sum(allocation),
-         pct= allocation / total) %>% 
-  filter(is_building_block == TRUE) %>% 
-  pull(pct) %>% 
-  scales::label_percent()(.)
-```
-
-In the Rochester region, **`r pct`** of the funding has been allocated towards these strategies that promote inclusive recovery and equitable growth, with most inclusive investments going toward reinvesting in disinvested communities, and least going to creating jobs for residents hardest hit by the pandemic or who face the greatest barriers to employment.
-
-```{r}
-total_allocations <-
-  data %>% 
-  summarise(total_allocation = sum(allocation, na.rm = TRUE), .by = "building_blocks") %>% 
-  arrange(desc(total_allocation))
-
-data_reordered <- 
-  data %>%
-  mutate(building_blocks = if_else(str_detect(building_blocks, 'Create jobs'), 'Create jobs', building_blocks)) %>% 
-  left_join(total_allocations, by = "building_blocks") %>%
-  mutate(building_blocks = reorder(building_blocks, total_allocation)) %>%
-  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("building_blocks", "geography")) %>%
-  drop_na()  %>% 
-  mutate(total_allocation = sum(allocation), .by = 'building_blocks') %>% 
-  mutate(building_blocks = reorder(building_blocks, total_allocation))
-
-data_reordered %>% 
-  ggplot(aes(x = building_blocks, y = allocation, fill = geography)) +
-  geom_col() +
-  scale_y_continuous(labels = scales::label_number(scale = 1/1e6, suffix = 'M', prefix = '$'),
-                     limits = c(0, 100 * 1e6),
-                     breaks = seq(0, 100 * 1e6, by = 25 * 1e6)) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) +
-  scale_fill_discrete(guide = guide_legend(reverse = TRUE)) +
-  coord_flip() +
-  scale_fill_manual(values = racf_palette) +
-  labs(x = NULL, y = 'Total Allocation')
-```
 
 ## How does funding align with the Rochester Area Community Foundation’s priorities? 
 
