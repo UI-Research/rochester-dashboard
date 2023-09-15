@@ -106,9 +106,9 @@ data %>%
 
     scale_fill_manual(
         values = c("Monroe County.Allocated to a building block" = alpha("#D6A123", 1), 
-                   "Monroe County.Allocated to other programs" = alpha("#d2d2d2", 0.9),
+                   "Monroe County.Allocated to other programs" = alpha("#d2d2d2", 1),
                    "Rochester.Allocated to a building block" = alpha("#ED0A72", 1),
-                   "Rochester.Allocated to other programs" = alpha("#696969", 0.9)),
+                   "Rochester.Allocated to other programs" = alpha("#696969", 1)),
         labels = c("Monroe County - Building Block", "Monroe County - Other Programs", "Rochester - Building Block", "Rochester - Other Programs"),
         name = "Allocation"
     ) +
