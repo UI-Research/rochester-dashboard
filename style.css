@@ -26,6 +26,10 @@ p {
   margin: 0 0 8px 0; /* Sets the margin to 0 on top, 8 pixels on bottom, and 0 on the left and right */
 }
 
+p.caption {
+  font-size: 8%;
+}
+
 /* Sets the display properties for elements with class .cols */
 .cols {
   display: flex; /* Makes this element a flexible box container */
@@ -50,7 +54,10 @@ p {
   color: #ffffff; /* Sets the text color to white */
   font-weight: bold; /* Sets the font weight to bold */
   font-family: 'Proxima', serif; /* Sets the font family */
+  font-size: 75%;
+
 }
+
 
 /* Sets the color of text inside the .navbar-brand class inside .navbar-default */
 .navbar-default .navbar-brand {
@@ -60,6 +67,8 @@ p {
 /* Sets the color of text inside anchor tags that are children of list items, which are in .navbar-nav within .navbar-default */
 .navbar-default .navbar-nav > li > a {
   color: #FFFFFF; /* Sets the text color to white */
+    border: 2px solid white; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
 }
 
 /* Sets the styles for the active state, focused state and hover state of anchor tags within list items in .navbar-nav within .navbar-default */
@@ -67,18 +76,24 @@ p {
   color: #D6A123; /* Sets the text color to an orange shade */
   background-color: #FFFFFF; /* Sets the background color to white */
   font-family: "Proxima Nova"; /* Sets the font family */
+  border: 2px solid white; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
 }
 
 /* Styles for primary buttons in different states (normal, hover, active, visited) */
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
   background-color: #D6A123 !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
   border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
+  border: 2px solid white; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
 }
 
 /* Styles for primary outlined buttons in different states (normal, hover, active, visited) */
 .btn-outline-primary, .btn-outline-primary:hover, .btn-outline-primary:active, .btn-outline-primary:visited {
   background-color: #D6A123 !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
   border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
+  border: 2px solid white; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
 }
 
 /* Styles for the first anchor tag in a list within .nav-pills inside .color-tabs */

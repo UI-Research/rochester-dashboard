@@ -77,8 +77,8 @@ source <-
 ```{r}
 pct <-
   data %>% 
-  group_by(is_building_block = !is.na(building_blocks)) %>% 
-  summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
+  mutate(is_building_block = !is.na(building_blocks)) %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = "is_building_block") %>% 
   mutate(total = sum(allocation),
          pct= allocation / total) %>% 
   filter(is_building_block == TRUE) %>% 
