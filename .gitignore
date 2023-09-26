@@ -4,9 +4,9 @@
 .httr-oauth
 .DS_Store
 .docx
-
 /.quarto/
 /_site/
-
 .docx
 /documents/
+~/.boxr-oauth
+leaflet-scratch.R

@@ -75,15 +75,16 @@ source <-
 ```
 
 ```{r}
-pct <-
+building_blocks_pct <-
   data %>% 
-  group_by(is_building_block = !is.na(building_blocks)) %>% 
-  summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
+  mutate(is_building_block = !is.na(building_blocks)) %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = "is_building_block") %>% 
   mutate(total = sum(allocation),
          pct= allocation / total) %>% 
   filter(is_building_block == TRUE) %>% 
   pull(pct) %>% 
-  scales::label_percent(digits = 1)(.)
+  scales::label_percent(digits = 1)(.) %>% 
+  as.character()
 
 last_update_date <-
   readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |> dplyr::pull("current_as_of") |> unique() |> stringr::str_remove(" UTC") %>% as_date() %>% format("%m/%d%/%y")
@@ -122,7 +123,7 @@ are: create jobs for those who face the greatest barriers to employment, connect
 historically excluded residents to jobs and economic opportunities, reinvest in
 disinvested communities, stabilize housing and expand affordable housing, and
 create opportunities for low-wealth households to build wealth. As of
-`r last_update_date`, `r pct` of the dollars in the City of Rochester and Monroe
+`r last_update_date`, `r building_blocks_pct` of the dollars in the City of Rochester and Monroe
 County were allocated toward programs and initiatives that align with these
 building blocks.
 
@@ -162,7 +163,7 @@ include:
     households and housing-insecure renters
 5.  Create opportunities for low-wealth households to **build wealth**.
 
-Across all allocations for the city and county, **`r pct`** of the funding has
+Across all allocations for the city and county, **`r building_blocks_pct`** of the funding has
 been allocated towards these strategies that promote inclusive recovery and
 equitable growth. The figure below shows the total amount of funding for
 Rochester and Monroe County that was allocated to programs that align with these
@@ -468,12 +469,13 @@ data %>%
 ```{r racf-funding-pct}
 allocated_to_racf_pct <-
   data %>% 
-  group_by(is_priority = is.na(racf_categories)) %>% 
-  summarise(allocation = sum(allocation, na.rm = TRUE)) %>% 
+  mutate(is_priority = !is.na(racf_categories)) %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = "is_priority") %>% 
   mutate(total = sum(allocation, na.rm = TRUE),
          pct = allocation / total) %>% 
   filter(is_priority == TRUE) %>% 
   pull(pct)
+
 ```
 
 The Rochester Area Community Foundation's key priorities for investment in the
