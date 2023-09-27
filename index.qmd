@@ -290,7 +290,7 @@ bottom3 <-
 ```{epoxy, .transformer =  epoxy_transform_inline(.percent = scales::label_percent(accuracy = 0.1), .dollar = scales::label_dollar(scale = 1/1e6, suffix = "M", accuracy = 1))}
   
   
-The City of Rochester and Monroe County have allocated almost **{.dollar total_allocated}** of SLFRF funds, and, of those, **{.pct pct_spent}** have been reported as spent. The figure below shows how that funding has been allocated across policy categories and includes all allocations, not just those that align with the building blocks of an inclusive recovery.  
+Overall, the City of Rochester and Monroe County have allocated almost **{.dollar total_allocated}** of SLFRF funds, and, of those, **{.pct pct_spent}** have been reported as spent. The figure below shows how that funding has been allocated across policy categories and includes all allocations, not just those that align with the building blocks of an inclusive recovery.  
  
 By category, most of the funds have been allocated to {top3}, while the least have been allocated to {bottom3}. 
 
