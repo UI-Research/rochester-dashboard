@@ -86,6 +86,18 @@ building_blocks_pct <-
   scales::label_percent(digits = 1)(.) %>% 
   as.character()
 
+building_blocks_by_geography_pct <-
+  data %>% 
+  mutate(is_building_block = !is.na(building_blocks)) %>% 
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("is_building_block", "geography")) %>% 
+  mutate(total = sum(allocation),
+         pct= allocation / total, ,.by = c("geography")) %>% 
+  filter(is_building_block == TRUE) %>% 
+  pull(pct) %>% 
+  scales::label_percent(digits = 1)(.) %>% 
+  as.character() %>% 
+  set_names(c("monroe", "rochester"))
+
 last_update_date <-
   readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |> dplyr::pull("current_as_of") |> unique() |> stringr::str_remove(" UTC") %>% as_date() %>% format("%m/%d%/%y")
 ```
@@ -111,7 +123,7 @@ Funds](https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-
 (SLFRF) provided through the American Rescue Plan Act (ARPA). SLFRF must be
 obligated by the end of 2024 and spent by the end of 2026. The dashboard focuses
 on SLFRF because of their flexibility in giving local governments authority to
-decide how they should be spent. And, they tended to be on longer term recovery
+decide how they should be spent. And, they tended to be spent on longer term recovery
 efforts rather than on short term emergency public health response, which was
 the focus of Coronavirus Aid, Relief, and Economic Security Act (CARES Act)
 dollars.
@@ -167,7 +179,7 @@ Across all allocations for the city and county, **`r building_blocks_pct`** of t
 been allocated towards these strategies that promote inclusive recovery and
 equitable growth. The figure below shows the total amount of funding for
 Rochester and Monroe County that was allocated to programs that align with these
-building blocks, based on review of the program description and goals.
+building blocks, based on review of the program description and goals. `r building_blocks_by_geography_pct[["rochester"]]` of the City of Rochester's funds were allocated toward the building blocks of an inclusive recovery, whereas `r building_blocks_by_geography_pct[["monroe"]]` of Monroe County's were.
 
 ```{r}
 
@@ -264,13 +276,15 @@ top3 <-
   allocations_by_topic %>% 
   slice_max(topic_allocation, n = 3) %>% 
   pull(topic) %>% 
-  str_flatten_comma(", and ")
+  str_flatten_comma(", and ") %>% 
+  str_to_lower()
 
 bottom3 <-
   allocations_by_topic %>% 
   slice_min(topic_allocation, n = 3) %>% 
   pull(topic) %>% 
-  str_flatten_comma(", and ")
+  str_flatten_comma(", and ") %>% 
+  str_to_lower()
 ```
 
 ```{epoxy, .transformer =  epoxy_transform_inline(.percent = scales::label_percent(accuracy = 0.1), .dollar = scales::label_dollar(scale = 1/1e6, suffix = "M", accuracy = 1))}
@@ -536,7 +550,7 @@ Owners' Loan Corporation used to grade the profitability of neighborhoods in the
 late 1930s. The four categories were green ("best"), blue ("still desirable"),
 yellow ("definitely declining"), and red ("hazardous"). These grades were
 largely based on the neighborhood's racial, ethnic, socioeconomic, and religious
-composition. Generally, White, middle-class neighborhoods received FHA home
+composition. Generally, white, middle-class neighborhoods received FHA home
 loans, whereas many Black and Hispanic/Latino neighborhoods were deemed
 hazardous and declining in value and did not receive FHA insured mortgages or
 loans. These maps [had long lasting
