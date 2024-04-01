@@ -178,10 +178,14 @@ Fiscal Recovery Funds
 provided through the American Rescue Plan Act (ARPA). SLFRF must be obligated by
 the end of 2024 and spent by the end of 2026. The dashboard focuses on SLFRF
 because of their flexibility in giving local governments authority to decide how
-they should be spent.
+they should be spent. And, we focus on how well these allocations align with the
+building blocks of an inclusive recovery and equitable growth, shown below.
 
-**The Building Blocks of An Inclusive Recovery**
-![](images/building-blocks.png){fig-cap-location="top"}
+**The Building Blocks of An Inclusive Recovery and Equitable Growth**
+
+[![Source: Adapted from Poethig et al 2018 in collaboration with community
+stakeholders across the
+country](www/images/building-blocks.png){fig-align="center"}](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
 
 The dashboard is laid out as follows:
 
@@ -189,21 +193,18 @@ The dashboard is laid out as follows:
     shown above
 -   How funds are being spent by policy area and subtopic
 -   Alignment of allocations with Rochester Area Community Foundation’s
-    priorities 
+    priorities
 -   Mapping of the City of Rochester’s SLFRF capital investments onto original
     redlining maps for the city and current racial characteristics of
     neighborhoods
 -   Detailed table of all allocations and their descriptions
 
-**This dashboard does not track outcomes from these investments – it only
-shows where the dollars are flowing.** Simply allocating funds toward topics that could increase equity and inclusion
-does not guarantee that they do so. Future research efforts should closely
-monitor outcomes and impacts from the recovery dollar investments to ensure that
-they close equity gaps exacerbated by the pandemic and address the root causes
-of inequities.
-
-
-
+**Note: This dashboard does not track outcomes from these investments – it only
+shows where the dollars are flowing.** Simply allocating funds toward topics
+that could increase equity and inclusion does not guarantee that they do so.
+Future research efforts should closely monitor outcomes and impacts from the
+recovery dollar investments to ensure that they close equity gaps exacerbated by
+the pandemic and address the root causes of inequities.
 
 ## How Much is Being Spent on an Inclusive Recovery?
 
@@ -214,22 +215,22 @@ were created in collaboration with community stakeholders across the country and
 include:
 
 1.  **Create jobs** for residents hardest hit by the pandemic or who face the
-    greatest barriers to employment;
-2.  **Connect residents to jobs** and economic opportunities, including through
-    workforce development, child care, transportation, or broadband;
+    greatest barriers to employment
+2.  **Connect historically excluded residents to jobs and economic
+    opportunities**, including through workforce development, child care,
+    transportation, or broadband
 3.  **Reinvest in disinvested communities** and address long-standing
     disparities in access to education, capital, economic opportunities, and
-    climate resilience;
+    climate resilience
 4.  **Stabilize housing and expand affordable housing** options for low-income
-    households and housing-insecure renters;
+    households and housing-insecure renters
 5.  Create opportunities for low-wealth households to **build wealth**.
 
 By our estimation, **`r building_blocks_pct`** of city and county funding has
-been allocated towards these strategies that promote inclusive recovery and
+been allocated towards the building blocks of an inclusive recovery and
 equitable growth. The figure below shows the total amount of funding for
 Rochester and Monroe County that was allocated to programs that align with these
 building blocks, based on review of the program description and goals.
-
 
 ```{r}
 #| fig-cap: !expr source
@@ -272,10 +273,16 @@ pct_allocated_inclusive_recovery |>
   coord_flip() +
   labs(
     x = NULL, y = NULL,
-    title = NULL
+    title = "Percent Allocated Toward an Inclusive Recovery "
   ) +
   guides(color = guide_legend(reverse = FALSE))
 ```
+
+## These Data in Action
+
+These number have real effects on people’s lives. For example, [insert GI recipient’s name], seen below, received funding through the City of Rochester’s Guaranteed income pilot. This means that she received $X each month over [time period]. This helped her XYZ. 
+
+![Source: XYZ](www/images/example-data-story.png)
 
 Out of the 65% of funds allocated to programs that align with the five building
 blocks of an inclusive recovery, the most funding has been allocated to
@@ -327,6 +334,14 @@ data_reordered %>%
   ) +
   labs(x = NULL, y = "Total Allocation")
 ```
+
+ 
+## How might Rochester invest more in some of these building blocks? 
+
+Other places have found ways to use federal funds to invest in stabilizing housing, building wealth, and creating jobs. For instance, the City of Boston is using ARPA funds to transform publicly-owned land into green, mixed income communities. One project in Chinatown, shown below, will include 83 affordable rental units and 36 affordable homeownership units. The property is a short walk to two train stops and is located in a walkable and bikeable neighborhood. The project was developed after extensive community engagement with nearby neighbors and will also be energy efficient and follow the City of Boston’s Carbon Free, Climate Resilient, and Healthy Community goals. 
+
+![Source: XYZ](www/images/example-data-story2.jpg)
+
 
 ## What policy areas are being funded?
 
@@ -586,11 +601,14 @@ data %>%
 ```
 :::
 
+## What does this look like in action?
+
+PLACEHOLDER TEXT
+
 ## How much has been spent?
 
-The City of Rochester and Monroe County have allocated almost $301M in SLFRF
+The City of Rochester and Monroe County have allocated almost \$301M in SLFRF
 funds, and, of those, 14.6% have been reported as spent.
-
 
 ```{r}
 pct_spent <-
@@ -627,7 +645,6 @@ pct_spent |>
     caption = "Note: No data is available for Monroe County"
   )
 ```
-
 
 ## How does funding align with the Rochester Area Community Foundation's priorities?
 
@@ -720,6 +737,7 @@ poverty, followed by advancing environmental justice. Less well funded through
 SLFRF are preserving historical assets, promoting successful aging, and
 supporting arts and culture.
 
+
 ```{r}
 #| fig-cap: !expr source
 data %>%
@@ -738,6 +756,10 @@ data %>%
   coord_flip() +
   labs(x = NULL, y = "Total Allocation")
 ```
+
+## An example: RENEW
+
+PLACEHOLDER TEXT
 
 ## Which neighborhoods are the funds being spent in?
 
@@ -1005,6 +1027,10 @@ hispanic_map + project_location_map
 
 <br>
 
+## What does this look like?
+
+HINGE EXAMPLE PLACEHOLDER TEXT
+
 ## Explore All Programs Funded {#programs-table}
 
 This table shows all programs that the City of Rochester and Monroe County have
@@ -1084,13 +1110,13 @@ data %>%
 ## About the Dashboard
 
 This dashboard was created by the [Urban Institute](https://www.urban.org/) in
-partnership with and support from ACT Rochester and [Rochester Area Community Foundation
-(RACF)](https://www.racf.org/) to visualize Monroe County and the City of
-Rochester's ARPA spending by the five building blocks of inclusive recovery,
-policy category, and RACF's investment priorities. By tracking recovery funding
-expenditures, this dashboard allows us to monitor public spending by the
-categories most critical in supporting an inclusive recovery from the COVID-19
-pandemic.
+partnership with and support from ACT Rochester and [Rochester Area Community
+Foundation (RACF)](https://www.racf.org/) to visualize Monroe County and the
+City of Rochester's ARPA spending by the five building blocks of inclusive
+recovery, policy category, and RACF's investment priorities. By tracking
+recovery funding expenditures, this dashboard allows us to monitor public
+spending by the categories most critical in supporting an inclusive recovery
+from the COVID-19 pandemic.
 
 ```{r}
 data %>%
@@ -1109,8 +1135,8 @@ data %>%
 <br>
 
 For more information about the dashboard, please contact [Meg
-Norris](mailto:mnorris@racf.org) (ACT Rochester) or
-[Christina Stacy](mailto:cstacy@urban.org) (Urban Institute).
+Norris](mailto:mnorris@racf.org) (ACT Rochester) or [Christina
+Stacy](mailto:cstacy@urban.org) (Urban Institute).
 
 Click For [Glossary of Terms](glossary.qmd)
 
