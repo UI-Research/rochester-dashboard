@@ -15,18 +15,20 @@ website:
       - href: glossary.qmd
 format:
   html:
-    include-in-header: header.html
+    # include-in-header: header.html
     css: style.css
+    # theme:
+    #   - styles.scss
+    # mainfont: montserrat
     embed-resources: true
-    standalone: true
-    code-fold: true
+    code-fold: false
     code-link: true
     code-line-numbers: true
     df-print: default
     toc: false
+    toc-title: Contents
     toc-depth: 3
-    number-sections: false
-    number-depth: 3
+    toc-location: left
     highlight-style: pygments
     smooth-scroll: true
     grid:
@@ -36,3 +38,7 @@ format:
       gutter-width: 1.5em
 execute:
   freeze: auto
+  echo: false
+  message: false
+  warning: false
+  error: false

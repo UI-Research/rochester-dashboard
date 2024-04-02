@@ -1,6 +1,48 @@
-/* Proxima Nova for body text, tables, charts, and anything small.
-   FreightMacro Pro for headlines and titles
-*/
+/*-- scss:defaults --*/
+
+// Import fonts
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+$font-family-sans-serif: 'Montserrat', sans-serif;
+$heading-font: 'Roboto', sans-serif;
+
+// Colors
+$yellow: #D6A123;
+$pink: #ED0A72;
+$light-pink: lighten($pink, 20%);
+$magenta: #D442CF;
+$dark-gray: #696B4F;
+$light-gray: #8FAEBE;
+$orange: #AB5833;
+$yellow-brown: #978638;
+$purple: #5D4E78;
+$dark-blue: #36689F;
+$light-green: #70910B;
+// Colors
+$dark-green: #858E79;
+$light-green: #D1D9CE;
+$cream: #FDFBF7;
+$gray: #64605f;
+
+// Base document colors
+$navbar-bg: $yellow; // navbar
+$navbar-fg: $magenta; // navbar foreground elements
+$navbar-hl: $purple; // highlight color when hovering over navbar links
+// $body-bg: $light-green; // page background
+$body-color: $gray; // page text
+$footer-bg: $cream; // footer
+$link-color: $purple; // hyperlinks
+
+// Inline code
+$code-bg: $cream; // inline code background color
+$code-color: $purple; // inline code text color
+
+// Code blocks
+$code-block-bg: $cream; // code block background color
+/*-- scss:rules--*/
+
 
 /* Sets the font family and size for elements with class .container-fluid (usually used for navbar text) */
 .container-fluid {
@@ -15,23 +57,23 @@ body, table, .chart {
 
 /* Sets the font family, color, font size, and margin for heading elements (h1 to h6) */
 h1 {
-  font-family: 'FreightMacro Pro', serif; /* Sets the font family */
+  font-family: $heading-font; /* Sets the font family */
   font-size: 2.25em;
-  color: #36689F; /* Sets the font color to an orange shade */
+  color: $dark-blue; /* Sets the font color to an orange shade */
   margin: 5.0 0 .5em; /* Sets the margin around the headings */
 }
 
 h2, h3 {
-  font-family: 'FreightMacro Pro', serif; /* Sets the font family */
+  font-family: $heading-font; /* Sets the font family */
   font-size: 2.0em;
-  color: #D6A123; /* Sets the font color to an orange shade */
+  color: $yellow; /* Sets the font color to an orange shade */
   margin: 5.0 0 .5em; /* Sets the margin around the headings */
 }
 
 h4, h5, h6 {
-   font-family: 'FreightMacro Pro', serif; /* Sets the font family */
+   font-family: $heading-font; /* Sets the font family */
   font-size: 1.5em;
-  color: #70910B; /* Sets the font color to an orange shade */
+  color: $light-green; /* Sets the font color to an orange shade */
   margin: 5.0 0 .5em; /* Sets the margin around the headings */
 }
 /* Sets the margin for paragraph elements */
@@ -55,7 +97,7 @@ p.caption {
   max-height: 500px; /* Maximum height is 500 pixels */
   min-height: 44px; /* Minimum height is 44 pixels */
   overflow-y: auto; /* Adds a scrollbar if the content overflows vertically */
-  background: white;
+  background: $cream;
   border: 1px solid #ddd; /* Sets border around the element */
   border-radius: 4px; /* Rounds the corners of the element's border */
 }
@@ -63,10 +105,10 @@ p.caption {
 /* Styles for the navbar */
 .navbar {
   display: block; /* The element is displayed as a block-level element */
-  background-color: #D6A123; /* Sets background color to an orange shade */
-  color: #ffffff; /* Sets the text color to white */
+  background-color: $yellow; /* Sets background color to an orange shade */
+  color: $cream; /* Sets the text color to white */
   font-weight: bold; /* Sets the font weight to bold */
-  font-family: 'Proxima', serif; /* Sets the font family */
+  font-family: $font-family-sans-serif; /* Sets the font family */
   font-size: 75%;
 
 }
@@ -74,52 +116,52 @@ p.caption {
 
 /* Sets the color of text inside the .navbar-brand class inside .navbar-default */
 .navbar-default .navbar-brand {
-  color: #FFFFFF; /* Sets the text color to white */
+  color: $cream; /* Sets the text color to white */
 }
 
 /* Sets the color of text inside anchor tags that are children of list items, which are in .navbar-nav within .navbar-default */
 .navbar-default .navbar-nav > li > a {
-  color: #FFFFFF; /* Sets the text color to white */
-    border: 2px solid white; /* Adjust the border width and color as needed */
-  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
+  color: $cream; /* Sets the text color to white */
+    border: 2px solid $cream; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px $cream; /* Optional: add a subtle shadow for depth */
 }
 
 /* Sets the styles for the active state, focused state and hover state of anchor tags within list items in .navbar-nav within .navbar-default */
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
-  color: #D6A123; /* Sets the text color to an orange shade */
-  background-color: #FFFFFF; /* Sets the background color to white */
+  color: $yellow; /* Sets the text color to an orange shade */
+  background-color: $cream; /* Sets the background color to white */
   font-family: "Proxima Nova"; /* Sets the font family */
-  border: 2px solid white; /* Adjust the border width and color as needed */
-  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
+  border: 2px solid $cream; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px $cream; /* Optional: add a subtle shadow for depth */
 }
 
 /* Styles for primary buttons in different states (normal, hover, active, visited) */
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-  background-color: #D6A123 !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
+  background-color: $yellow !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
   border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
-  border: 2px solid white; /* Adjust the border width and color as needed */
-  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
+  border: 2px solid $cream; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px $cream; /* Optional: add a subtle shadow for depth */
 }
 
 /* Styles for primary outlined buttons in different states (normal, hover, active, visited) */
 .btn-outline-primary, .btn-outline-primary:hover, .btn-outline-primary:active, .btn-outline-primary:visited {
-  background-color: #D6A123 !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
+  background-color: $yellow !important; /* Sets the background color to an orange shade, !important overrides other conflicting styles */
   border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
-  border: 2px solid white; /* Adjust the border width and color as needed */
-  box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
+  border: 2px solid $cream; /* Adjust the border width and color as needed */
+  box-shadow: 0px 0px 10px $cream; /* Optional: add a subtle shadow for depth */
 }
 
 /* Styles for the first anchor tag in a list within .nav-pills inside .color-tabs */
 .color-tabs > .nav-pills > li:nth-of-type(1) > a {
-  color: #ED0A72; /* Sets the text color to black */
-  background-color: white; /* Sets the background color to white */
+  color: $pink; /* Sets the text color to black */
+  background-color: $cream; /* Sets the background color to white */
   border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
 }
 
 /* Styles for hover, focus and active states of the first anchor tag in a list within .nav-pills inside .color-tabs */
 .color-tabs > .nav-pills > li:nth-of-type(1) > a:hover, .color-tabs > .nav-pills > li:nth-of-type(1) > a:focus, .color-tabs > .nav-pills > li:nth-of-type(1).active > a, .color-tabs > .nav-pills > li:nth-of-type(1).active > a:hover, .color-tabs > .nav-pills > li:nth-of-type(1).active > a:focus {
-  color: white; /* Sets the text color to white */
-  background-color: #ED0A72; /* Sets the background color to a pink shade */
+  color: $cream; /* Sets the text color to white */
+  background-color: $pink; /* Sets the background color to a pink shade */
 }
 
 /* Global Formats */
@@ -136,22 +178,22 @@ p.caption {
 
 /* Sets color for unvisited links */
 a:link {
-  color: #ED0A72; /* Sets the text color to a pink shade */
+  color: $pink; /* Sets the text color to a pink shade */
 }
 
 /* Sets color for visited links */
 a:visited {
-  color: #8FAEBE; /* Sets the text color to a shade of blue */
+  color: lighten($purple, 20%); /* Sets the text color to a shade of blue */
 }
 
 /* Sets color for links when the mouse cursor is over them */
 a:hover {
-  color: #D442CF; /* Sets the text color to a shade of pink */
+  color: lighten($pink, 20%); /* Sets the text color to a shade of pink */
 }
 
 /* Sets color for links at the moment they are clicked */
 a:active {
-  color: #D442CF; /* Sets the text color to a shade of pink */
+  color: $magenta; /* Sets the text color to a shade of pink */
 }
 
 /* Adds padding at the top of elements with id #header */
@@ -161,8 +203,8 @@ a:active {
 
 /* Sets the background color and border color for active .list-group-item elements */
 .list-group-item.active {
-  background-color: #D6A123; /* Sets the background color to an orange shade */
-  border-color: #D6A123; /* Sets the border color to an orange shade */
+  background-color: $yellow; /* Sets the background color to an orange shade */
+  border-color: $yellow; /* Sets the border color to an orange shade */
 }
 
 /* Sets the background color and border color for hovered active .list-group-item elements */
@@ -185,30 +227,30 @@ a:active {
 
 /* Sets the background color for active anchor tags within a list in .nav-pills */
 .nav-pills > li.active > a {
-  background-color: #D6A123; /* Sets the background color to an orange shade */
+  background-color: $yellow; /* Sets the background color to an orange shade */
 }
 
 /* Sets the background color for focused active anchor tags within a list in .nav-pills */
 .nav-pills > li.active > a:focus {
-  background-color: #D6A123; /* Sets the background color to an orange shade */
+  background-color: $yellow; /* Sets the background color to an orange shade */
 }
 
 /* Sets the color and background color for focused anchor tags within a list in .nav */
 .nav > li > a:focus {
-  color: #ED0A72; /* Sets the text color to a pink shade */
-  background-color: white; /* Sets the background color to white */
+  color: $pink; /* Sets the text color to a pink shade */
+  background-color: $cream; /* Sets the background color to white */
 }
 
 
 /* Sets the background color and text color for hovered anchor tags within a list in .nav */
 .nav > li > a:hover {
-  background-color: #ED0A72; /* Sets the background color to a pink shade */
-  color: white; /* Sets the text color to white */
+  background-color: $pink; /* Sets the background color to a pink shade */
+  color: $cream; /* Sets the text color to white */
 }
 
 /* Sets the text color for anchor tags with role attribute set to tab */
 a[role=tab] {
-  color: #ED0A72; /* Sets the text color to a pink shade */
+  color: $pink; /* Sets the text color to a pink shade */
 }
 
 /* Media query for print styling */
@@ -272,3 +314,5 @@ div.explore {
   background-image: url("www/images/explore.png");
   background-color: #d0faee; /* green card background */
 }
+
+
