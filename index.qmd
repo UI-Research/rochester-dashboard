@@ -139,23 +139,10 @@ building_blocks_by_geography_pct <-
   scales::label_percent(digits = 1)(.) %>%
   as.character() %>%
   set_names(c("monroe", "rochester"))
-
-last_update_date <-
-  readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |>
-  dplyr::pull("current_as_of") |>
-  unique() |>
-  stringr::str_remove(" UTC") %>%
-  as_date() %>%
-  format("%m/%d%/%y")
 ```
 
 ```{r}
-library(bslib)
-library(shiny)
-library(bsicons)
-```
-
-```{r}
+#| label: value-boxes
 vbs <- list(
   value_box(
     title = "Percent of funds Allocated towards an Inclusive Recovery in the Region",
@@ -183,7 +170,6 @@ layout_column_wrap(
 )
 ```
 
-
 The federal government provided unprecedented levels of flexible relief funds to
 local governments across the country, including those [in the Rochester
 region](https://www.urban.org/sites/default/files/publication/105119/harnessing-federal-funds-for-inclusive-recovery-in-rochester-ny_0.pdf),
@@ -198,6 +184,7 @@ used](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
 to ensure that everyone--especially historically excluded groups--can benefit
 from and contribute to economic growth.
 
+
 To increase transparency in this process, this dashboard tracks data on how the
 City of Rochester and Monroe County have allocated and spent [State and Local
 Fiscal Recovery Funds
@@ -207,6 +194,7 @@ the end of 2024 and spent by the end of 2026. The dashboard focuses on SLFRF
 because of their flexibility in giving local governments authority to decide how
 they should be spent. And, we focus on how well these allocations align with the
 building blocks of an inclusive recovery and equitable growth, shown below.
+
 
 **The Building Blocks of An Inclusive Recovery and Equitable Growth**
 
@@ -381,6 +369,7 @@ Development, Infrastructure, and Housing, while the least have been allocated to
 Operations, Public Health and COVID-19 Response, and Social Services.
 
 ```{r}
+#| label: calculate-allocation-numbers
 total_allocated <- summarise(data, total = sum(allocation, na.rm = TRUE)) %>% pull()
 total_spent <- summarise(data, total_spent = sum(spent, na.rm = TRUE)) %>% pull()
 pct_spent <- total_spent / total_allocated
@@ -409,6 +398,7 @@ bottom3 <-
 ## Allocated
 
 ```{r}
+#| label: fig-policy-areas-allocation
 #| fig-cap: !expr source
 data_reordered <-
   data %>%
@@ -638,6 +628,7 @@ The City of Rochester and Monroe County have allocated almost \$301M in SLFRF
 funds, and, of those, 14.6% have been reported as spent.
 
 ```{r}
+#| label: fig-pct-spent
 pct_spent <-
   data |>
   summarise(
@@ -655,27 +646,45 @@ pct_spent <-
     names_to = "spending_status",
     values_to = "percentage"
   ) |>
-  mutate(spending_status = str_remove(spending_status, "pct_") |>
-    str_to_title() |> factor(levels = c("Unspent", "Spent")))
+  mutate(
+    spending_status = if_else(geography == "Monroe County", "Missing Data", spending_status),
+    spending_status = str_remove(spending_status, "pct_") |>
+      str_to_title() |> factor(levels = c("Missing Data", "Unspent", "Spent"))
+  ) |>
+  filter(percentage != 0)
+
 
 pct_spent |>
   ggplot(aes(fill = spending_status, y = percentage, x = geography)) +
   geom_bar(position = "fill", stat = "identity", na.rm = FALSE, width = 0.4) +
+  geom_text(aes(label = scales::label_percent(accuracy = 1)(percentage)),
+    position = position_stack(vjust = 0.5),
+    # hjust = -0.1,
+    color = "white",
+    size = 5, fontface = "bold"
+  ) +
   scale_y_continuous(labels = scales::percent_format()) +
   scale_fill_manual(
-    values = c(racf_palette[9], racf_palette[10]),
+    values = c(palette_urbn_gray[5], racf_palette[9], racf_palette[10]),
     guide = guide_legend(reverse = TRUE)
   ) +
   coord_flip() +
   labs(
     x = NULL, y = NULL,
     caption = "Note: No data is available for Monroe County"
+  ) +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.line = element_blank()
   )
 ```
 
 ## How does funding align with the Rochester Area Community Foundation's priorities?
 
 ```{r racf-funding-pct}
+#| label: racf-funding-pct
 allocated_to_racf_pct <-
   data %>%
   mutate(is_priority = !is.na(racf_categories)) %>%
@@ -713,6 +722,7 @@ Overall, **{.pct allocated_to_racf_pct}** of SLFRF funding has been allocated to
 ```
 
 ```{r}
+#| label: fig-pct-allocated-racf-overall
 pct_allocated_racf_overall <-
   data |>
   mutate(racf_category = if_else(is.na(racf_categories), "Other", "RACF Priority")) |>
@@ -746,6 +756,12 @@ pct_allocated_racf_recovery <-
 pct_allocated_racf_recovery |>
   ggplot(aes(fill = racf_category, y = percentage, x = geography)) +
   geom_bar(position = "fill", stat = "identity", width = 0.5) +
+  geom_text(aes(label = scales::label_percent(accuracy = 1)(percentage)),
+    position = position_stack(vjust = 0.5),
+    # hjust = -0.1,
+    color = "white",
+    size = 5, fontface = "bold"
+  ) +
   scale_y_continuous(labels = scales::percent_format()) +
   scale_fill_manual(
     values = c(racf_palette[7], racf_palette[8]),
@@ -766,6 +782,7 @@ supporting arts and culture.
 
 
 ```{r}
+#| label: fig-pct-allocated-racf-by-geography
 #| fig-cap: !expr source
 data %>%
   summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("racf_categories", "geography")) %>%
@@ -809,8 +826,8 @@ FHA insured mortgages or loans. These maps [had long lasting
 effects](https://www.econstor.eu/bitstream/10419/200568/1/1010730592.pdf) on
 racial segregation, homeownership, and house values in redlined neighborhoods.
 
-**To increase equity in the region, leaders must focus investments in
-communities that have been underinvested in historically.** These investments
+__To increase equity in the region, leaders must focus investments in
+communities that have been underinvested in historically.__ These investments
 must be those that , meaning that they should not be investments that only
 benefit new, incoming wealthier residents, or those that have negative impacts
 on immediate neighbors, like a sewage treatment facility or a highway that
@@ -821,7 +838,8 @@ investments align with the goals of community members and how much they benefit
 historically excluded residents.
 
 ::: panel-tabset
-```{r redlining-data-wrangling}
+```{r}
+#| label: redlining-data-wrangling
 #|fig-cap: !expr redlining_source
 
 redlining_source <- glue::glue('Source: {tags$a("The Mapping Inequality Project", href = "https://dsl.richmond.edu/panorama/redlining/#loc=5/39.1/-94.58")} and ACS Data 2017-2021')
@@ -865,7 +883,8 @@ project_locations <-
   drop_na(`Project name`)
 ```
 
-```{r race-data-wrangling, echo=FALSE, message=FALSE, warning=FALSE,error=FALSE}
+```{r}
+#| label:  race-data-wrangling
 rochester <-
   tigris::places("NY", cb = TRUE, year = 2021) %>%
   filter(NAME == "Rochester") %>%
@@ -898,7 +917,8 @@ race <- tidycensus::get_acs(
   sf::st_as_sf()
 ```
 
-```{r project-locations-map}
+```{r}
+#| label: project-locations-map
 my_popup <-
   glue::glue(
     "<div style='width: 300px; word-wrap: break-word;'><strong>{project_locations$`Project name`}</strong><br>",
@@ -925,7 +945,9 @@ project_location_map <-
 
 ### Redlining
 
-```{r redlining-map}
+```{r}
+#| label: redlining-map
+
 # Create the map
 m <- mapviewOptions(fgb = TRUE) # This will make the base map faster by using a faster background map
 redlining_palette <- c(palette_urbn_main["green"], palette_urbn_main["cyan"], palette_urbn_main["yellow"], palette_urbn_main["red"])
@@ -943,6 +965,7 @@ m <-
 
 m + project_location_map
 ```
+
 
 ```{r}
 #| eval: false
@@ -1057,6 +1080,8 @@ hispanic_map + project_location_map
 ## What does this look like?
 
 HINGE EXAMPLE PLACEHOLDER TEXT
+
+![Source: XYZ](www/images/example-data-story3.png)
 
 ## Explore All Programs Funded {#programs-table}
 
