@@ -243,11 +243,12 @@ include:
 
 By our estimation, **`r building_blocks_pct`** of city and county funding has
 been allocated towards the building blocks of an inclusive recovery and
-equitable growth. The figure below shows the total amount of funding for
+equitable growth. @fig-pct-allocated-inclusive-recovery below shows the total amount of funding for
 Rochester and Monroe County that was allocated to programs that align with these
 building blocks, based on review of the program description and goals.
 
 ```{r}
+#| label: fig-pct-allocated-inclusive-recovery
 #| fig-cap: !expr source
 
 
@@ -303,11 +304,12 @@ Out of the 65% of funds allocated to programs that align with the five building
 blocks of an inclusive recovery, the most funding has been allocated to
 reinvesting in disinvested communities while the least has been allocated to
 creating jobs for residents hardest hit by the pandemic or who face the greatest
-barriers to employment. The figure below shows how that funding is divided among
+barriers to employment. @fig-building-blocks-allocation below shows how that funding is divided among
 the five building blocks and includes only the funds allocated to programs that
 align with the building blocks (the 65%).
 
 ```{r}
+#| label: fig-building-blocks-allocation
 #| fig-cap: !expr source
 
 total_allocations <-
@@ -360,7 +362,7 @@ Other places have found ways to use federal funds to invest in stabilizing housi
 
 ## What policy areas are being funded?
 
-The figure below shows how funding has been allocated across policy categories
+@fig-policy-areas-allocation shows how funding has been allocated across policy categories
 and includes all allocations, not just those that align with the building blocks
 of an inclusive recovery.
 
