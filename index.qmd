@@ -1,44 +1,23 @@
 ---
-title: 
-  "![](www/images/act-logo.png){width=6in}
-  <br>
-  Rochester Region Federal Funds Dashboard"
-subtitle: "How the Rochester Region Is Spending Federal Recovery Dollars"
 date: '`r readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |> dplyr::pull("current_as_of") |> unique() |> stringr::str_remove(" UTC") |> stringr::str_replace_all("-", "/") |> lubridate::ymd() |> format("%m/%d%/%y") `'
-date-format: "MMMM D, YYYY"
+date-format: long
 language:
   title-block-published: "Data as of"
 editor_options: 
   chunk_output_type: console
-execute:
-  echo: false
-  message: false
-  warning: false
-  error: false
-css: style.css
 knitr:
   opts_chunk: 
     dev: "ragg_png"
 editor: 
   markdown: 
     wrap: 80
-
-
+fig-width: 10
+fig-height: 6
 ---
 
-```{r, echo=FALSE, fig.align='center'}
-#| out-width: "500"
-# knitr::include_graphics(here::here("www", "images", "act-logo.png"), dpi = 800)
-```
-
 ```{r}
-ragg_png <- function(..., res = 192) {
-  ragg::agg_png(..., res = res, units = "in")
-}
-knitr::opts_chunk$set(dev = "ragg_png", fig.ext = "png")
-```
+#| label: setup
 
-```{r setup}
 librarian::shelf(
   tidyverse,
   here,
@@ -55,8 +34,18 @@ librarian::shelf(
   ggtext,
   boxr,
   epoxy,
-  htmltools
+  htmltools,
+  bslib,
+  bsicons,
+  shiny,
+  mccarthy - m - g / palettes
 )
+
+ragg_png <- function(..., res = 192) {
+  ragg::agg_png(..., res = res, units = "in")
+}
+knitr::opts_chunk$set(dev = "ragg_png", fig.ext = "png")
+
 options(tigris_use_cache = TRUE)
 set_urbn_defaults(style = "print", base_size = 12)
 box_auth()
@@ -64,11 +53,37 @@ racf_palette <- c(
   "#D6A123", "#ED0A72", "#D442CF", "#696B4F", "#8FAEBE",
   "#AB5833", "#978638", "#5D4E78", "#36689F", "#70910B"
 )
+
+racf_pal <-
+  pal_palette(racf_palette = racf_palette)
 ```
 
-# Work In Progress: DO NOT SHARE
 
-```{r load-data}
+```{=html}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap');
+</style>
+```
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Merriweather" />
+
+
+![](www/images/act-logo.png){width=800 fig-align="center"}
+
+<center>
+
+<h1> Rochester Region Federal Funds Dashboard </h1>
+
+<h4> How the Rochester Region Is Spending Federal Recovery Dollars </h4>
+
+**This dashboard is a draft undergoing active development. It should not be shared or used for analysis.**
+
+</center>
+
+
+
+```{r}
+#| label: load-data
+
 data_url <- "https://urbanorg.box.com/shared/static/a62wrsemjiaezr43c3lnkqlf2t69ymlv.xlsx"
 download.file(data_url, "data/data-raw/dashboard-data.xlsx")
 
@@ -78,13 +93,25 @@ data <-
   mutate(racf_categories = str_to_title(racf_categories)) %>%
   select(-c(matches("notes"), expiration, is_expired, notes, summary_description, flexible_fund, amount_exact)) |>
   mutate(building_block = if_else(is.na(building_blocks), "Other", "Building Block"))
-
-
-source <-
-  glue::glue('Source: Urban Institute calculations of data from {tags$a("City of Rochester ARPA Reporting Dashboard", href = "https://app.powerbi.com/view?r=eyJrIjoiMmFkYzI3ZTAtMjIzMS00YWQ0LTgyZjItYmY5YTIxYTIxNzUwIiwidCI6ImJlMjdkYTJlLTk0YjQtNDFkYS05NDdkLWY2MDJkNjBlODA3YyJ9&pageName=ReportSectioneb9f6e0e0a6d0db032dc")} and {tags$a("Monroe County Recovery Plan 2023 Annual Report", href = "https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments.pdf")}')
 ```
 
 ```{r}
+#| label: constants
+
+source <-
+  glue::glue('Source: Urban Institute calculations of data from {tags$a("City of Rochester ARPA Reporting Dashboard", href = "https://app.powerbi.com/view?r=eyJrIjoiMmFkYzI3ZTAtMjIzMS00YWQ0LTgyZjItYmY5YTIxYTIxNzUwIiwidCI6ImJlMjdkYTJlLTk0YjQtNDFkYS05NDdkLWY2MDJkNjBlODA3YyJ9&pageName=ReportSectioneb9f6e0e0a6d0db032dc")} and {tags$a("Monroe County Recovery Plan 2023 Annual Report", href = "https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments.pdf")}')
+
+last_update_date <-
+  readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |>
+  dplyr::pull("current_as_of") |>
+  unique() |>
+  stringr::str_remove(" UTC") %>%
+  as_date() %>%
+  format("%m/%d%/%y")
+```
+
+```{r}
+#| label: value-boxes-data
 building_blocks_pct <-
   data %>%
   mutate(is_building_block = !is.na(building_blocks)) %>%
