@@ -6,6 +6,7 @@
 .docx
 /.quarto/
 /_site/
+/_extensions/
 .docx
 /documents/
 ~/.boxr-oauth

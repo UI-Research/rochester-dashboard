@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: _site
   render:
     - index.qmd
     - glossary.qmd
@@ -9,6 +10,13 @@ website:
   navbar:
     search: true
     pinned: true
+    tools:
+      - icon: github
+        menu:
+          - text: Source Code
+            url:  https://github.com/UI-Research/rochester-dashboard
+          - text: Report a Bug
+            url:  https://github.com/UI-Research/rochester-dashboard/issues
     left:
       - text: "Federal Recovery Funds Dashboard"
         href: index.qmd
@@ -29,7 +37,7 @@ format:
     toc-title: Contents
     toc-depth: 3
     toc-location: left
-    highlight-style: pygments
+    highlight-style: github
     smooth-scroll: true
     grid:
       sidebar-width: 250px
