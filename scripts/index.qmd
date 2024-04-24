@@ -21,7 +21,7 @@ fig-height: 6
 librarian::shelf(
   tidyverse,
   here,
-  urbnthemes,
+  UrbanInstitute/urbnthemes,
   gt,
   tidycensus,
   mapview,
@@ -67,13 +67,13 @@ racf_pal <-
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Merriweather" />
 
 
-![](www/images/act-logo.png){width=800 fig-align="center"}
+![](../www/images/act-logo.png){width=800 fig-align="center"}
 
 <center>
 
-<h1> Rochester Region Federal Funds Dashboard </h1>
+# Rochester Region Federal Funds Dashboard  {toc-text="Introduction"}
 
-<h4> How the Rochester Region Is Spending Federal Recovery Dollars </h4>
+#### How the Rochester Region Is Spending Federal Recovery Dollars 
 
 **This dashboard is a draft undergoing active development. It should not be shared or used for analysis.**
 
@@ -200,7 +200,7 @@ building blocks of an inclusive recovery and equitable growth, shown below.
 
 [![Source: Adapted from Poethig et al 2018 in collaboration with community
 stakeholders across the
-country](www/images/building-blocks.png){fig-align="center"}](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
+country](../www/images/building-blocks.png){fig-align="center"}](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
 
 The dashboard is laid out as follows:
 
@@ -309,11 +309,11 @@ pct_allocated_inclusive_recovery |>
   )
 ```
 
-## These Data in Action
+### These Data in Action
 
 These number have real effects on people’s lives. For example, [insert GI recipient’s name], seen below, received funding through the City of Rochester’s Guaranteed income pilot. This means that she received $X each month over [time period]. This helped her XYZ. 
 
-![Source: XYZ](www/images/example-data-story.png)
+![Source: XYZ](../www/images/example-data-story.png)
 
 Out of the 65% of funds allocated to programs that align with the five building
 blocks of an inclusive recovery, the most funding has been allocated to
@@ -374,11 +374,11 @@ data_reordered %>%
 ```
 
  
-## How might Rochester invest more in some of these building blocks? 
+### How might Rochester invest more in some of these building blocks? 
 
 Other places have found ways to use federal funds to invest in stabilizing housing, building wealth, and creating jobs. For instance, the City of Boston is using ARPA funds to transform publicly-owned land into green, mixed income communities. One project in Chinatown, shown below, will include 83 affordable rental units and 36 affordable homeownership units. The property is a short walk to two train stops and is located in a walkable and bikeable neighborhood. The project was developed after extensive community engagement with nearby neighbors and will also be energy efficient and follow the City of Boston’s Carbon Free, Climate Resilient, and Healthy Community goals. 
 
-![Source: XYZ](www/images/example-data-story2.jpg)
+![Source: XYZ](../www/images/example-data-story2.jpg)
 
 
 ## What policy areas are being funded?
@@ -417,7 +417,7 @@ bottom3 <-
   str_to_lower()
 ```
 
-::: panel-tabset
+::: {.panel-tabset .nav-pills}
 ## Allocated
 
 ```{r}
@@ -492,7 +492,7 @@ data %>%
 ```
 :::
 
-## What subtopics are funded within each policy area?
+### What subtopics are funded within each policy area?
 
 The figure below provides a more detailed breakdown of allocations to each
 policy area. Each policy area tab breaks down the allocations into subtopics.
@@ -500,7 +500,7 @@ For example, most of the money allocated to community and economic development
 has gone to workforce development.
 
 ::: panel-tabset
-### Community and Economic Development
+#### Community and Economic Development
 
 ```{r}
 #| fig-cap: !expr source
@@ -528,7 +528,7 @@ data %>%
   labs(x = NULL, y = "Total allocation")
 ```
 
-### Infrastructure
+#### Infrastructure
 
 ```{r}
 #| fig-cap: !expr source
@@ -556,7 +556,7 @@ data %>%
   labs(x = NULL, y = "Total allocation")
 ```
 
-### Housing
+#### Housing
 
 ```{r}
 #| fig-cap: !expr source
@@ -584,7 +584,7 @@ data %>%
   labs(x = NULL, y = "Total allocation")
 ```
 
-### Public Safety
+#### Public Safety
 
 ```{r}
 #| fig-cap: !expr source
@@ -612,7 +612,7 @@ data %>%
   labs(x = NULL, y = "Total allocation")
 ```
 
-### Social Services
+#### Social Services
 
 ```{r}
 #| fig-cap: !expr source
@@ -640,7 +640,7 @@ data %>%
   labs(x = NULL, y = "Total allocation")
 ```
 
-### Public Health
+#### Public Health
 
 ```{r}
 #| fig-cap: !expr source
@@ -668,7 +668,7 @@ data %>%
   labs(x = NULL, y = "Total allocation")
 ```
 
-### Operations
+#### Operations
 
 ```{r}
 #| fig-cap: !expr source
@@ -697,7 +697,7 @@ data %>%
 ```
 :::
 
-## What does this look like in action?
+### What does this look like in action?
 
 PLACEHOLDER TEXT
 
@@ -760,7 +760,7 @@ pct_spent |>
   )
 ```
 
-## How does funding align with the Rochester Area Community Foundation's priorities?
+### How does funding align with the Rochester Area Community Foundation's priorities?
 
 ```{r racf-funding-pct}
 #| label: racf-funding-pct
@@ -880,7 +880,7 @@ data %>%
   labs(x = NULL, y = "Total Allocation")
 ```
 
-## An example: RENEW
+### An example: RENEW
 
 PLACEHOLDER TEXT
 
@@ -944,12 +944,14 @@ spending <-
 genesee_spending <-
   spending %>% filter(str_detect(`Street`, "873|Genesee"))
 
+Sys.setenv(PROJ_LIB = "")
 project_locations <-
   read_csv("data/data-raw/addresses-geocoded.csv") %>%
   janitor::clean_names() %>%
-  filter(longitude != 0) %>%
-  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
-  st_transform(st_crs(4326)) %>%
+  filter(longitude != 0) |> 
+  st_as_sf(coords = c("longitude", "latitude"),
+           crs = 4326) |> 
+  st_transform(crs = 4326) %>%
   filter(type == "arpa_spending_status") %>%
   distinct(match_addr, .keep_all = TRUE) %>%
   left_join(spending, by = c("f_address" = "Street")) %>%
@@ -959,7 +961,8 @@ project_locations <-
     `ARPA Funding` = if_else(str_detect(match_addr, "873|Genesee"), genesee_spending$`ARPA Funding`, `ARPA Funding`),
     `Arpa funding numeric` = if_else(str_detect(match_addr, "873|Genesee"), genesee_spending$`Arpa funding numeric`, `Arpa funding numeric`)
   ) %>%
-  drop_na(`Project name`)
+  drop_na(`Project name`) |> 
+  mutate(type = if_else(type == "arpa_spending_status", "City of Rochester Capital Projects", type))
 ```
 
 ```{r}
@@ -1011,9 +1014,7 @@ my_label <- glue::glue("<strong>{project_locations$`Project name`}</strong> ({pr
   map(htmltools::HTML)
 
 project_location_map <-
-  mapview(
-    project_locations %>%
-      mutate(type = if_else(type == "arpa_spending_status", "City of Rochester Capital Projects", type)),
+  mapview(project_locations,
     zcol = "type", cex = "Arpa funding numeric", col.regions = "grey",
     popup = my_popup,
     label = my_label,
@@ -1156,11 +1157,11 @@ hispanic_map + project_location_map
 
 <br>
 
-## What does this look like?
+### What does this look like?
 
 HINGE EXAMPLE PLACEHOLDER TEXT
 
-![Source: XYZ](www/images/example-data-story3.png)
+![Source: XYZ](../www/images/example-data-story3.png)
 
 ## Explore All Programs Funded {#programs-table}
 
@@ -1177,7 +1178,7 @@ table.
 Data current as of: `r last_update_date`
 
 ```{r}
-#|label: "programs-table"
+#| label: "programs-table"
 data %>%
   # Should subtopic be included?
   select(

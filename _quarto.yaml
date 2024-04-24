@@ -1,49 +1,43 @@
 project:
   type: website
   output-dir: _site
+  execute-dir: project
   render:
-    - index.qmd
-    - glossary.qmd
+    - scripts/index.qmd
+    - scripts/glossary.qmd
 website:
   title: ""
   page-navigation: true
   navbar:
     search: true
     pinned: true
-    tools:
-      - icon: github
-        menu:
-          - text: Source Code
-            url:  https://github.com/UI-Research/rochester-dashboard
-          - text: Report a Bug
-            url:  https://github.com/UI-Research/rochester-dashboard/issues
     left:
       - text: "Federal Recovery Funds Dashboard"
-        href: index.qmd
-      - href: glossary.qmd
+        href: scripts/index.qmd
+      - href: scripts/glossary.qmd
+  sidebar:
+      style: "floating"
+      background: light
+      collapse-level: 1
+      contents:
+        - scripts/index.qmd
 format:
   html:
-    # include-in-header: header.html
-    css: style.css
-    # theme:
-    #   - styles.scss
-    # mainfont: montserrat
+    page-layout: full
+    theme:
+      - styles.scss
+    mainfont: montserrat
     embed-resources: true
     code-fold: false
     code-link: true
     code-line-numbers: true
     df-print: default
-    toc: false
+    toc: true
     toc-title: Contents
     toc-depth: 3
     toc-location: left
     highlight-style: github
     smooth-scroll: true
-    grid:
-      sidebar-width: 250px
-      body-width: 800px
-      margin-width: 250px
-      gutter-width: 1.5em
 execute:
   freeze: auto
   echo: false

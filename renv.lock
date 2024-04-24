@@ -744,7 +744,7 @@
     },
     "gtable": {
       "Package": "gtable",
-      "Version": "0.3.4",
+      "Version": "0.3.5",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
@@ -755,7 +755,7 @@
         "lifecycle",
         "rlang"
       ],
-      "Hash": "b29cf3031f49b04ab9c852c912547eef"
+      "Hash": "e18861963cbc65a27736e02b3cd3c4a0"
     },
     "haven": {
       "Package": "haven",
@@ -805,14 +805,14 @@
     },
     "htmltools": {
       "Package": "htmltools",
-      "Version": "0.5.7.9000",
+      "Version": "0.5.8.9000",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "htmltools",
       "RemoteUsername": "rstudio",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "30d13a16c4bfb84b435e9aa772501f39cf9b6f0e",
+      "RemoteRepo": "htmltools",
+      "RemoteRef": "main",
+      "RemoteSha": "038ef7be3b02a9248f122b745ad7830cc429d437",
       "Requirements": [
         "R",
         "base64enc",
@@ -822,7 +822,7 @@
         "rlang",
         "utils"
       ],
-      "Hash": "aaa564dc7ed9ac12ebf5d6fcf4a9dc86"
+      "Hash": "46560a1c802adc01f9feb8e968d73db1"
     },
     "httr": {
       "Package": "httr",
@@ -1053,14 +1053,14 @@
     },
     "munsell": {
       "Package": "munsell",
-      "Version": "0.5.0",
+      "Version": "0.5.1",
       "Source": "Repository",
       "Repository": "RSPM",
       "Requirements": [
         "colorspace",
         "methods"
       ],
-      "Hash": "6dfe8bf774944bd5595785e3229d8771"
+      "Hash": "4fd8900853b746af55b81fda99da7695"
     },
     "nlme": {
       "Package": "nlme",
@@ -1455,9 +1455,9 @@
     },
     "sf": {
       "Package": "sf",
-      "Version": "1.0-16",
+      "Version": "1.0-17",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "https://r-spatial.r-universe.dev",
       "Requirements": [
         "DBI",
         "R",
@@ -1474,7 +1474,7 @@
         "units",
         "utils"
       ],
-      "Hash": "ad57b543f7c3fca05213ba78ff63df9b"
+      "Hash": "8b62cc43018a2ce8e7abefb7835633d7"
     },
     "snakecase": {
       "Package": "snakecase",

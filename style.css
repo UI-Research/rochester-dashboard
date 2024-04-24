@@ -56,7 +56,7 @@ p.caption {
   min-height: 44px; /* Minimum height is 44 pixels */
   overflow-y: auto; /* Adds a scrollbar if the content overflows vertically */
   background: white;
-  border: 1px solid #ddd; /* Sets border around the element */
+ /* border: 1px solid #ddd; /* Sets border around the element */
   border-radius: 4px; /* Rounds the corners of the element's border */
 }
 
@@ -67,7 +67,7 @@ p.caption {
   color: #ffffff; /* Sets the text color to white */
   font-weight: bold; /* Sets the font weight to bold */
   font-family: 'Proxima', serif; /* Sets the font family */
-  font-size: 75%;
+  font-size: 90%;
 
 }
 
@@ -80,7 +80,7 @@ p.caption {
 /* Sets the color of text inside anchor tags that are children of list items, which are in .navbar-nav within .navbar-default */
 .navbar-default .navbar-nav > li > a {
   color: #FFFFFF; /* Sets the text color to white */
-    border: 2px solid white; /* Adjust the border width and color as needed */
+  /*  border: 2px solid white; /* Adjust the border width and color as needed */
   box-shadow: 0px 0px 10px white; /* Optional: add a subtle shadow for depth */
 }
 
