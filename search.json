@@ -53,7 +53,7 @@
     "href": "scripts/index.html#programs-table",
     "title": "Rochester Region Federal Funds Dashboard",
     "section": "Explore All Programs Funded",
-    "text": "Explore All Programs Funded\nThis table shows all programs that the City of Rochester and Monroe County have allocated SLFRF funds to, as well as their building block, policy area, policy subtopic, and RACF priority area category. The default display on the table shows the programs in order from largest to smallest allocation. You can use the arrows next to each column title to sort the table by that column, and you can use the search bars under each column or the overall search bar to search the table. \nData current as of: 05/01/24, 07/31/23"
+    "text": "Explore All Programs Funded\nThis table shows all programs that the City of Rochester and Monroe County have allocated SLFRF funds to, as well as their building block, policy area, policy subtopic, and RACF priority area category. The default display on the table shows the programs in order from largest to smallest allocation. You can use the arrows next to each column title to sort the table by that column, and you can use the search bars under each column or the overall search bar to search the table. \nData current as of: 05/01/24"
   },
   {
     "objectID": "scripts/index.html#about-the-dashboard",
