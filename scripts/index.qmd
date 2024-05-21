@@ -35,7 +35,8 @@ librarian::shelf(
   bsicons,
   shiny,
   mccarthy - m - g / palettes,
-  ggtext
+  ggtext, 
+  rvest
 )
 
 ragg_png <- function(..., res = 192) {
@@ -90,8 +91,32 @@ data <-
 ```{r}
 #| label: constants
 
-source <-
-  glue::glue('Source: Urban Institute calculations of data from {tags$a("City of Rochester ARPA Reporting Dashboard", href = "https://app.powerbi.com/view?r=eyJrIjoiNTg3NGZjNTYtYWI3NC00NTc3LWI1YTktZWJmMzY2NjBjNTBiIiwidCI6ImJlMjdkYTJlLTk0YjQtNDFkYS05NDdkLWY2MDJkNjBlODA3YyJ9")} and {tags$a("Monroe County Recovery Plan 2023 Annual Report", href = "https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments.pdf")}.')
+# URL to scrape
+url <- "https://www.cityofrochester.gov/ARPA/"
+
+# Read the HTML content from the website
+webpage <- read_html(url)
+urls <- html_nodes(webpage, "a")
+# Extract all links from the webpage
+dashboard_url_index <-
+  urls |> 
+  html_attr("title") |> 
+  str_which("Click here to access the dashboard." )
+
+dashboard_url <-
+  urls |> 
+  html_attr("href") |> 
+  pluck(dashboard_url_index)
+
+rochester_source <- 
+ tags$a("City of Rochester ARPA Reporting Dashboard", href = dashboard_url)
+
+monroe_source <- 
+  tags$a("Monroe County Recovery Plan 2023 Annual Report", href = "https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments.pdf")
+
+source <- glue::glue('Source: Urban Institute calculations of data from {rochester_source} and {monroe_source}')
+source2 <-
+  glue::glue('Source: Urban Institute calculations of data from {tags$a("City of Rochester ARPA Reporting Dashboard", href = "{dashboard_url}")} and {tags$a("Monroe County Recovery Plan 2023 Annual Report", href = "https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments.pdf")}.')
 
 last_update_date <-
   readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |>
@@ -101,6 +126,7 @@ last_update_date <-
   as_date() |>
   max() |>
   format("%m/%d%/%y")
+
 ```
 
 ```{r}
