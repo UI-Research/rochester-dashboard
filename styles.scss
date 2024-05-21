@@ -2,10 +2,15 @@
 
 // Import fonts
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+// Fonts
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+// stylelint-disable value-keyword-case
+$font-family-sans-serif: 'Montserrat', Roboto, sans-serif;
 
-$font-family-sans-serif: 'Montserrat', sans-serif;
+// stylelint-enable
+
+$font-size-root: 1rem;
 $heading-font: 'Roboto', sans-serif;
 
 // Colors
@@ -24,86 +29,55 @@ $gray: #64605f;
 $dark-gray: #696B4F;
 $light-gray: #8FAEBE;
 
-// Base document colors
-$navbar-bg: $yellow; // navbar
-$navbar-fg: $cream; // navbar foreground elements
-$navbar-hl: $cream; // highlight color when hovering over navbar links
-// $body-bg: $light-green; // page background
-$body-color: $gray; // page text
-$footer-bg: $cream; // footer
-$link-color: $purple; // hyperlinks
-
 
 /*-- scss:rules--*/
 
 /* -------------- Global Formats -------------------*/
-
-
-/* Sets the font family and size for elements with class .container-fluid (usually used for navbar text) */
-.container-fluid {
-  font-family: 'Proxima Nova', serif;
-  font-size: 2em;
-}
-
-/* Sets the font family for body, table, and elements with class .chart */
-body, table, .chart {
-  font-family: 'Proxima Nova', sans-serif; /* Sets the font family */
-  font-size: 1.5em;
-  margin: 5px 0 5px 0;
-}
-
-/* Sets the font family, color, font size, and margin for heading elements (h1 to h6) */
-h1 {
-  font-family: $heading-font; /* Sets the font family */
-  font-size: 3em;
-  color: $blue; /* Sets the font color to an orange shade */
-  margin: 5.0 0 .5em; /* Sets the margin around the headings */
-}
-
-h2, h3, h4, h5, h6 {
-  font-family: $heading-font; /* Sets the font family */
-  font-size: 2.0em;
-  color: $yellow; /* Sets the font color to an orange shade */
-  margin: 5.0 0 .5em; /* Sets the margin around the headings */
-}
-
-
 /* Sets the margin for paragraph elements */
+/* Define a mixin for font styling */
+/* Define a mixin for font styling */
+@mixin font-style($font-family, $font-size, $color, $font-weight: null) {
+  font-family: $font-family;
+  font-size: $font-size;
+  color: $color;
+  font-weight: $font-weight;
+}
+
+/* Define a mixin for margin styling */
+@mixin margin-style($top, $right, $bottom, $left) {
+  margin: $top $right $bottom $left;
+}
+
+/* Define a mixin for background and border styling */
+@mixin background-border-style($background-color, $border: null, $border-radius: null) {
+  background-color: $background-color;
+  border: $border;
+  border-radius: $border-radius;
+}
+
+/* Use the mixins in styles */
 p {
-   margin: 15px 0 15px 0; /* Sets the margin to 15 on top and bottom, 0 pixels on right/left */
+  @include margin-style(10px, 0, 10px, 0);
+  // max-width: 65ch;
+  line-height: 1.5em;
+  @include font-style($font-family-sans-serif, null, null, null);
+  font-weight: $font-weight-normal;
 }
 
-/* Header image formatting */
-#header {
-	padding-top: 12px;
+h1 {
+  @include font-style($heading-font, 1.75em, $blue);
+  @include margin-style(0, 0, 0, 0); //
 }
 
-
-/* Adds margin at the bottom of elements with class .tab-content */
-.tab-content {
-  margin-bottom: 30px; /* Adds 30 pixels margin at the bottom */
+h2{
+  @include font-style($heading-font, 1.4em, $yellow);
 }
 
-/* Sets color for unvisited links */
-a:link {
-  color: $pink; /* Sets the text color to a pink shade */
+h3, h4, h5, h6 {
+  @include font-style($heading-font, 1.1em, $yellow);
+  /* Uncomment the following line if you want to apply the same margin style as h1 */
+  /* @include margin-style(5.0, 0, .5em, 0); */
 }
-
-/* Sets color for visited links */
-a:visited {
-  color: $light-pink; /* Sets the text color to a shade of blue */
-}
-
-/* Sets color for links when the mouse cursor is over them */
-a:hover {
-  color: $light-pink; /* Sets the text color to a shade of pink */
-}
-
-/* Sets color for links at the moment they are clicked */
-a:active {
-  color: $cream; /* Sets the text color to a shade of pink */
-}
-
 
 /* -------------- Navbar + Pills Formats -------------------*/
 
@@ -112,52 +86,54 @@ a:active {
 /* nav-link: the text inside the tabs */
 /* tab-content: the content displayed when a tab is clicked */
 
-/* Styles for the navbar */
+
 .navbar {
-  display: block; /* The element is displayed as a block-level element */
-  background-color: $blue; /* Sets background color to an orange shade */
-  color: $cream; /* Sets the text color to white */
-  font-weight: bold; /* Sets the font weight to bold */
-  font-family: $font-family-sans-serif; /* Sets the font family */
-  font-size: 100%;
-
+  display: block;
+  @include background-border-style($blue);
+  @include font-style($font-family-sans-serif, 80%, $cream, bold);
 }
-
-/* Make active navbar tab yellow and inactive ones cream */
-.navbar-nav .nav-link, .navbar-nav .nav-link.show {
+.navbar-nav {
+  .nav-link {
     color: $cream;
+
+    &:hover {
+      color: lighten($yellow, 30%);
+    }
+
+    &.show, &.active, &:active {
+      color: $yellow;
+    }
+
+    &.show:hover, &.active:hover, &:active:hover {
+      color: lighten($yellow, 30%);
+    }
+  }
 }
-.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
-    color: $yellow;
+.nav {
+  & > .nav-tabs > .tablist {
+    display: inline-table;
+    overflow-y: auto;
+    @include background-border-style($pink, '1px solid #ddd', '4px');
+  }
+
+  & > li > a:hover {
+    @include background-border-style($cream, null, null);
+    color: $pink;
+  }
 }
 
-/* Styles the tablist inside .nav-tabs which is inside .nav */
-.nav > .nav-tabs > .tablist {
-  display: inline-table; /* The element is displayed as an inline-level table */
-  overflow-y: auto; /* Adds a scrollbar if the content overflows vertically */
-  background-color: $pink;
-  border: 1px solid #ddd; /* Sets border around the element */
-  border-radius: 4px; /* Rounds the corners of the element's border */
-}
+.color-tabs {
+  & > .nav-pills > li:nth-of-type(1) {
+    & > a {
+      @include background-border-style($cream, null, '8px !important');
+      color: $pink;
+    }
 
-/* Styles for the first anchor tag in a list within .nav-pills inside .color-tabs */
-.color-tabs > .nav-pills > li:nth-of-type(1) > a {
-  color: $pink; /* Sets the text color to black */
-  background-color: $cream; /* Sets the background color to white */
-  border-radius: 8px !important; /* Sets rounded corners with 8 pixels radius, !important overrides other conflicting styles */
-}
-
-/* Styles for hover, focus and active states of the first anchor tag in a list within .nav-pills inside .color-tabs */
-.color-tabs > .nav-pills > li:nth-of-type(1) > a:hover, .color-tabs > .nav-pills > li:nth-of-type(1) > a:focus, .color-tabs > .nav-pills > li:nth-of-type(1).active > a, .color-tabs > .nav-pills > li:nth-of-type(1).active > a:hover, .color-tabs > .nav-pills > li:nth-of-type(1).active > a:focus {
-  background-color: $pink; /* Sets the background color to a pink shade */
-  color: $pink; /* Sets the text color to white */
-}
-
-
-/* Sets the background color and text color for hovered anchor tags within a list in .nav */
-.nav > li > a:hover {
-  color: $pink; /* Sets the background color to a pink shade */
-  background-color: $cream; /* Sets the text color to white */
+    & > a:hover, & > a:focus, &.active > a, &.active > a:hover, &.active > a:focus {
+      @include background-border-style($pink);
+      color: $pink;
+    }
+  }
 }
 
 /* Sets the text color for anchor tags with role attribute set to tab */
@@ -166,41 +142,46 @@ a[role=tab] {
 }
 
 
-
 /* -------------- Misc Styling  -------------------*/
 
 .quarto-title-block .quarto-title-banner {
   background-image: url(www/images/act-logo.png);
-  background-size: 800px;
+  background-size: 400px;
   background-position: left;
   background-repeat: no-repeat;
   padding-left: 10px;
   background-origin: content-box;
 }
 
-/* Media query for print styling */
+.figure-caption {
+  font-size: 0.8rem;
+}
+
+/* Media query for print styling
 @media print {
-  /* Hide elements with ids #TOC, #toc, #header-pinned and class .nav-tabs, .exclude when printing */
+  Hide elements with ids #TOC, #toc, #header-pinned and class .nav-tabs, .exclude when printing
   #TOC, #toc, #header-pinned, .nav-tabs, .exclude {
     display: none;
   }
 
-  /* Remove padding from the top of elements with class .contentBlock.title */
+  Remove padding from the top of elements with class .contentBlock.title
   .contentBlock.title {
     padding-top: 0px;
   }
 
-  /* Set height of elements with class .expandContainer for print */
+  Set height of elements with class .expandContainer for print
   .expandContainer {
-    height: fit-content !important; /* Fit the content's height, !important overrides other conflicting styles */
-    height: -moz-fit-content; /* Fit the content's height, for Mozilla browsers */
+    height: fit-content !important;  Fit the content's height, !important overrides other conflicting styles
+    height: -moz-fit-content;  Fit the content's height, for Mozilla browsers
   }
 
-  /* Force display block for elements with class .expandFull */
+  Force display block for elements with class .expandFull
   .expandFull {
-    display: block !important; /* Forces the element to be displayed as a block, !important overrides other conflicting styles */
+    display: block !important;  Forces the element to be displayed as a block, !important overrides other conflicting styles
   }
 }
+*/
+
 
 /* -------------- Div tips-------------------*/
 
@@ -230,4 +211,11 @@ div.explore {
   background-color: #d0faee; /* green card background */
 }
 
-
+/* Vertical centering of text in blockquote */
+.blockquote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  color: lighten($blue, 20%);
+}

@@ -1,8 +1,4 @@
 ---
-date: '`r readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |> dplyr::pull("current_as_of") |> unique() |> stringr::str_remove(" UTC") |> stringr::str_replace_all("-", "/") |> lubridate::ymd() |> format("%m/%d%/%y") `'
-date-format: long
-language:
-  title-block-published: "Data as of"
 editor_options: 
   chunk_output_type: console
 knitr:
@@ -21,7 +17,7 @@ fig-height: 6
 librarian::shelf(
   tidyverse,
   here,
-  UrbanInstitute/urbnthemes,
+  UrbanInstitute / urbnthemes,
   gt,
   tidycensus,
   mapview,
@@ -38,7 +34,8 @@ librarian::shelf(
   bslib,
   bsicons,
   shiny,
-  mccarthy - m - g / palettes
+  mccarthy - m - g / palettes,
+  ggtext
 )
 
 ragg_png <- function(..., res = 192) {
@@ -58,7 +55,6 @@ racf_pal <-
   pal_palette(racf_palette = racf_palette)
 ```
 
-
 ```{=html}
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap');
@@ -66,25 +62,21 @@ racf_pal <-
 ```
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Merriweather" />
 
-
-![](../www/images/act-logo.png){width=800 fig-align="center"}
+![](../www/images/act-logo.png){width="500" fig-align="center"}
 
 <center>
 
-# Rochester Region Federal Funds Dashboard  {toc-text="Introduction"}
+# Rochester Region Federal Funds Dashboard
 
-#### How the Rochester Region Is Spending Federal Recovery Dollars 
-
-**This dashboard is a draft undergoing active development. It should not be shared or used for analysis.**
+#### How the Rochester Region Is Spending Federal Recovery Dollars
 
 </center>
-
-
 
 ```{r}
 #| label: load-data
 
 data_url <- "https://urbanorg.box.com/shared/static/a62wrsemjiaezr43c3lnkqlf2t69ymlv.xlsx"
+
 download.file(data_url, "data/data-raw/dashboard-data.xlsx")
 
 data <-
@@ -99,14 +91,15 @@ data <-
 #| label: constants
 
 source <-
-  glue::glue('Source: Urban Institute calculations of data from {tags$a("City of Rochester ARPA Reporting Dashboard", href = "https://app.powerbi.com/view?r=eyJrIjoiMmFkYzI3ZTAtMjIzMS00YWQ0LTgyZjItYmY5YTIxYTIxNzUwIiwidCI6ImJlMjdkYTJlLTk0YjQtNDFkYS05NDdkLWY2MDJkNjBlODA3YyJ9&pageName=ReportSectioneb9f6e0e0a6d0db032dc")} and {tags$a("Monroe County Recovery Plan 2023 Annual Report", href = "https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments.pdf")}')
+  glue::glue('Source: Urban Institute calculations of data from {tags$a("City of Rochester ARPA Reporting Dashboard", href = "https://app.powerbi.com/view?r=eyJrIjoiNTg3NGZjNTYtYWI3NC00NTc3LWI1YTktZWJmMzY2NjBjNTBiIiwidCI6ImJlMjdkYTJlLTk0YjQtNDFkYS05NDdkLWY2MDJkNjBlODA3YyJ9")} and {tags$a("Monroe County Recovery Plan 2023 Annual Report", href = "https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments.pdf")}.')
 
 last_update_date <-
   readxl::read_xlsx("data/data-raw/dashboard-data.xlsx") |>
   dplyr::pull("current_as_of") |>
   unique() |>
-  stringr::str_remove(" UTC") %>%
-  as_date() %>%
+  stringr::str_remove(" UTC") |>
+  as_date() |>
+  max() |>
   format("%m/%d%/%y")
 ```
 
@@ -143,253 +136,88 @@ building_blocks_by_geography_pct <-
 
 ```{r}
 #| label: value-boxes
-vbs <- list(
+
+make_value_box <- function(number_value, title) {
   value_box(
-    title = "Percent of funds Allocated towards an Inclusive Recovery in the Region",
-    value = htmltools::tags$strong("65%"),
-    theme = value_box_theme(bg = "#fff1cc", fg = "#AB5833"),
-    fill = FALSE,
-  ),
-  value_box(
-    title = "Percent of funds Allocated towards an Inclusive Recovery in the City",
-    value = htmltools::tags$strong("55%"),
-    theme = value_box_theme(bg = "#ffffd1", fg = "#978638"),
-    fill = FALSE,
-  ),
-  value_box(
-    title = "Percent of funds allocated toward an Inclusive Recovery in the County:  ",
-    value = htmltools::tags$strong("85%"),
-    theme = value_box_theme(bg = "#e9daff", fg = "#5D4E78"),
+    title = "",
+    tags$span(htmltools::tags$strong(htmltools::HTML(paste0("<center>", number_value, "</center>")))),
+    HTML(paste0("<center>", title, "</center>")),
+    theme = value_box_theme(bg = "#FFFFFF", fg = "#ED0A72"),
     fill = FALSE,
   )
+}
+
+
+vbs <- list(
+  make_value_box("66%", HTML("Percent of SLFRF funds allocated toward an inclusive recovery and equitable economy in the <strong>City of Rochester and Monroe County Combined</strong>")),
+  make_value_box("54%", HTML("Percent of SLFRF funds allocated toward an inclusive recovery and equitable economy in the <strong>City of Rochester</strong>")),
+  make_value_box("89%", HTML("Percent of SLFRF funds allocated toward an inclusive recovery and equitable economy in <strong>Monroe County</strong>"))
 )
 
 layout_column_wrap(
   width = "250px",
   !!!vbs
 )
+
 ```
 
-The federal government provided unprecedented levels of flexible relief funds to
-local governments across the country, including those [in the Rochester
-region](https://www.urban.org/sites/default/files/publication/105119/harnessing-federal-funds-for-inclusive-recovery-in-rochester-ny_0.pdf),
-to help them recover from the economic impacts of the COVID-19 pandemic. As the
-City of Rochester and Monroe County continue to allocate and spend these federal
-recovery funds, they have an unparalleled opportunity to not only stimulate
-economic recovery, but to increase equity and remediate some of the past
-inequities that have been [built into our nation’s laws and
+This dashboard tracks data on how the City of Rochester and Monroe County have
+allocated [State and Local Fiscal Recovery Funds
+(SLFRF)](https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds#:~:text=The%20Coronavirus%20State%20and%20Local,COVID%2D19%20public%20health%20emergency)
+provided through the American Rescue Plan Act (ARPA). The federal government has
+transferred unprecedented levels of flexible relief funds to local governments
+to help them recover from the economic impacts of the COVID-19 pandemic and to
+move into longer term growth. As the City of Rochester and Monroe County
+[allocate and
+spend](https://www.urban.org/sites/default/files/publication/105119/harnessing-federal-funds-for-inclusive-recovery-in-rochester-ny_0.pdf)
+these federal funds, they have [an
+opportunity](https://www.urban.org/research/publication/how-equity-helps-lift-all-boats)
+to not only stimulate economic growth, but to increase equity and remediate some
+of the past injustices that have been [built into our nation’s laws and
 programs](https://books.google.com/books?hl=en&lr=&id=SdtDDQAAQBAJ&oi=fnd&pg=PT4&dq=color+of+law&ots=RL_u4QqRBH&sig=eYYnHvwibwB_XBfpzr0jQVK2SOs#v=onepage&q=color%20of%20law&f=false).
 To do so, the funds [must be
 used](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
 to ensure that everyone--especially historically excluded groups--can benefit
 from and contribute to economic growth.
 
+These funds grant a great deal of authority to municipal governments to decide
+how they should be spent, and they must be obligated by the end of 2024 and
+spent by the end of 2026. [Previous work by the Urban
+Institute](https://www.urban.org/sites/default/files/publication/105290/aligning-the-use-of-recovery-funds-with-community-goals-in-rochester-new-york.pdf)
+identified five building blocks of an inclusive recovery and equitable economy,
+shown below. These were identified based on empirical research and in
+collaboration with community leaders from across the country. We focus on how
+well these allocations align with the building blocks of an inclusive recovery
+and equitable economy.
 
-To increase transparency in this process, this dashboard tracks data on how the
-City of Rochester and Monroe County have allocated and spent [State and Local
-Fiscal Recovery Funds
-(SLFRF)](https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds#:~:text=The%20Coronavirus%20State%20and%20Local,COVID%2D19%20public%20health%20emergency)
-provided through the American Rescue Plan Act (ARPA). SLFRF must be obligated by
-the end of 2024 and spent by the end of 2026. The dashboard focuses on SLFRF
-because of their flexibility in giving local governments authority to decide how
-they should be spent. And, we focus on how well these allocations align with the
-building blocks of an inclusive recovery and equitable growth, shown below.
+**The Building Blocks of An Inclusive Recovery and Equitable Economy**
 
-
-**The Building Blocks of An Inclusive Recovery and Equitable Growth**
-
-[![Source: Adapted from Poethig et al 2018 in collaboration with community
-stakeholders across the
-country](../www/images/building-blocks.png){fig-align="center"}](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
+![Source: Adapted from [Poethig et al
+2018](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
+in collaboration with community stakeholders across the
+country](../www/images/building-blocks.png){fig-align="center"}
 
 The dashboard is laid out as follows:
 
--   Alignment of allocations with the building blocks of an inclusive recovery,
-    shown above
--   How funds are being spent by policy area and subtopic
--   Alignment of allocations with Rochester Area Community Foundation’s
-    priorities
--   Mapping of the City of Rochester’s SLFRF capital investments onto original
+-   [How funds are being spent by policy area and subtopic](#sec-policy-areas)
+-   [Alignment of allocations with Urban Institute’s building blocks of an
+    inclusive recovery and equitable economy](#sec-inclusive-recovery)
+-   [Alignment of allocations with Rochester Area Community Foundation’s (RACF)
+    focus areas](#sec-racf-focus-areas)
+-   [Mapping of the City of Rochester’s SLFRF capital investments onto original
     redlining maps for the city and current racial characteristics of
-    neighborhoods
--   Detailed table of all allocations and their descriptions
+    neighborhoods](#sec-mapping)
+-   [Detailed table of all allocations and their descriptions](#sec-table)
 
 **Note: This dashboard does not track outcomes from these investments – it only
-shows where the dollars are flowing.** Simply allocating funds toward topics
-that could increase equity and inclusion does not guarantee that they do so.
-Future research efforts should closely monitor outcomes and impacts from the
-recovery dollar investments to ensure that they close equity gaps exacerbated by
-the pandemic and address the root causes of inequities.
+shows where the dollars are flowing**[^1].
 
-## How Much is Being Spent on an Inclusive Recovery?
+## What policy areas are being funded? {#sec-policy-areas}
 
-[Previous work by the Urban
-Institute](https://www.urban.org/sites/default/files/publication/105290/aligning-the-use-of-recovery-funds-with-community-goals-in-rochester-new-york.pdf)
-identified five building blocks of an inclusive recovery. These building blocks
-were created in collaboration with community stakeholders across the country and
-include:
-
-1.  **Create jobs** for residents hardest hit by the pandemic or who face the
-    greatest barriers to employment
-2.  **Connect historically excluded residents to jobs and economic
-    opportunities**, including through workforce development, child care,
-    transportation, or broadband
-3.  **Reinvest in disinvested communities** and address long-standing
-    disparities in access to education, capital, economic opportunities, and
-    climate resilience
-4.  **Stabilize housing and expand affordable housing** options for low-income
-    households and housing-insecure renters
-5.  Create opportunities for low-wealth households to **build wealth**.
-
-By our estimation, **`r building_blocks_pct`** of city and county funding has
-been allocated towards the building blocks of an inclusive recovery and
-equitable growth. @fig-pct-allocated-inclusive-recovery below shows the total amount of funding for
-Rochester and Monroe County that was allocated to programs that align with these
-building blocks, based on review of the program description and goals.
-
-```{r}
-#| label: fig-pct-allocated-inclusive-recovery
-#| fig-cap: !expr source
-
-
-pct_allocated_inclusive_recovery_overall <-
-  data |>
-  summarise(
-    allocated = sum(allocation, na.rm = TRUE),
-    .by = c("building_block")
-  ) |>
-  mutate(geography = "Overall")
-
-pct_allocated_inclusive_recovery <-
-  data |>
-  summarise(
-    allocated = sum(allocation, na.rm = TRUE),
-    .by = c("building_block", "geography")
-  ) |>
-  full_join(pct_allocated_inclusive_recovery_overall, by = c("geography", "building_block", "allocated")) |>
-  mutate(
-    percentage = allocated / sum(allocated),
-    .by = c("geography")
-  ) |>
-  mutate(
-    geography = factor(geography,
-      levels = c("Monroe County", "Rochester", "Overall")
-    ),
-    building_block = factor(building_block,
-      levels = rev(c("Building Block", "Other"))
-    ),
-    pct_label = scales::label_percent(accuracy = 1)(percentage)
-  )
-
-pct_allocated_inclusive_recovery |>
-  ggplot(aes(fill = building_block, y = percentage, x = geography)) +
-  geom_bar(position = "fill", stat = "identity", width = 0.5) +
-  geom_text(aes(label = pct_label),
-    position = position_stack(vjust = 0.5),
-    # hjust = -0.1,
-    color = "white",
-    size = 5, fontface = "bold"
-  ) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  scale_fill_manual(
-    values = c(racf_palette[7], racf_palette[8]),
-    guide = guide_legend(reverse = TRUE)
-  ) +
-  coord_flip() +
-  labs(
-    x = NULL, y = NULL,
-    title = "Percent Allocated Toward an Inclusive Recovery "
-  ) +
-  guides(color = guide_legend(reverse = FALSE)) +
-  theme(
-    axis.title.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.ticks.x = element_blank(),
-    axis.line = element_blank()
-  )
-```
-
-### These Data in Action
-
-These number have real effects on people’s lives. For example, [insert GI recipient’s name], seen below, received funding through the City of Rochester’s Guaranteed income pilot. This means that she received $X each month over [time period]. This helped her XYZ. 
-
-![Source: XYZ](../www/images/example-data-story.png)
-
-Out of the 65% of funds allocated to programs that align with the five building
-blocks of an inclusive recovery, the most funding has been allocated to
-reinvesting in disinvested communities while the least has been allocated to
-creating jobs for residents hardest hit by the pandemic or who face the greatest
-barriers to employment. @fig-building-blocks-allocation below shows how that funding is divided among
-the five building blocks and includes only the funds allocated to programs that
-align with the building blocks (the 65%).
-
-```{r}
-#| label: fig-building-blocks-allocation
-#| fig-cap: !expr source
-
-total_allocations <-
-  data %>%
-  summarise(total_allocation = sum(allocation, na.rm = TRUE), .by = "building_blocks") %>%
-  arrange(desc(total_allocation))
-
-data_reordered <-
-  data %>%
-  mutate(building_blocks = case_when(
-    str_detect(building_blocks, pattern = "Create jobs") ~ "Create jobs",
-    str_detect(building_blocks, "build wealth") ~ "Build wealth",
-    str_detect(building_blocks, "Stabilize housing") ~ "Stabilize housing",
-    .default = building_blocks
-  )) %>%
-  left_join(total_allocations, by = "building_blocks") %>%
-  mutate(building_blocks = reorder(building_blocks, total_allocation)) %>%
-  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("building_blocks", "geography")) %>%
-  drop_na() %>%
-  mutate(total_allocation = sum(allocation), .by = "building_blocks") %>%
-  mutate(building_blocks = reorder(building_blocks, total_allocation)) |>
-  mutate(geography = factor(geography,
-    levels = c("Monroe County", "Rochester")
-  ))
-
-data_reordered %>%
-  ggplot(aes(x = building_blocks, y = allocation, fill = geography)) +
-  geom_col() +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocation)),
-    position = position_stack(vjust = 0.5),
-    # hjust = -0.1,
-    color = "white",
-    size = 4, fontface = "bold"
-  ) +
-  scale_y_continuous(
-    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
-    limits = c(0, 100 * 1e6),
-    breaks = seq(0, 100 * 1e6, by = 25 * 1e6)
-  ) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) +
-  coord_flip() +
-  scale_fill_manual(
-    values = racf_palette,
-    guide = guide_legend(reverse = TRUE)
-  ) +
-  labs(x = NULL, y = "Total Allocation")
-```
-
- 
-### How might Rochester invest more in some of these building blocks? 
-
-Other places have found ways to use federal funds to invest in stabilizing housing, building wealth, and creating jobs. For instance, the City of Boston is using ARPA funds to transform publicly-owned land into green, mixed income communities. One project in Chinatown, shown below, will include 83 affordable rental units and 36 affordable homeownership units. The property is a short walk to two train stops and is located in a walkable and bikeable neighborhood. The project was developed after extensive community engagement with nearby neighbors and will also be energy efficient and follow the City of Boston’s Carbon Free, Climate Resilient, and Healthy Community goals. 
-
-![Source: XYZ](../www/images/example-data-story2.jpg)
-
-
-## What policy areas are being funded?
-
-@fig-policy-areas-allocation shows how funding has been allocated across policy categories
-and includes all allocations, not just those that align with the building blocks
-of an inclusive recovery.
-
-By category, most of the funds have been allocated to Community and Economic
-Development, Infrastructure, and Housing, while the least have been allocated to
-Operations, Public Health and COVID-19 Response, and Social Services.
+The figure below shows how funding has been allocated across policy categories.
+Most of the funds have been allocated to Community and Economic Development,
+Infrastructure, and Housing, while the least have been allocated to Public
+Health and COVID-19 Response, Operations, and Public Safety. 
 
 ```{r}
 #| label: calculate-allocation-numbers
@@ -417,11 +245,8 @@ bottom3 <-
   str_to_lower()
 ```
 
-::: {.panel-tabset .nav-pills}
-## Allocated
-
 ```{r}
-#| label: fig-policy-areas-allocation
+#| label: fg-policy-areas-allocation
 #| fig-cap: !expr source
 data_reordered <-
   data %>%
@@ -431,7 +256,7 @@ data_reordered <-
 
 # Plotting the graph
 ggplot(data_reordered, aes(x = topic, y = allocation, fill = geography)) +
-  geom_col() +
+  geom_col(width = 0.8) +
   geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocation)),
     position = position_stack(vjust = 0.5),
     # hjust = -0.1,
@@ -444,72 +269,34 @@ ggplot(data_reordered, aes(x = topic, y = allocation, fill = geography)) +
     breaks = seq(0, 100 * 1e6, 25 * 1e6)
   ) +
   coord_flip() +
-  labs(x = NULL, y = "Total allocation") +
+  labs(x = NULL, y = "Total Allocation",
+       caption = "") +
   scale_fill_manual(
     values = racf_palette,
     guide = guide_legend(reverse = TRUE)
-  )
+  ) +
+    theme(plot.caption=element_markdown())
 ```
 
+## What subtopics are funded within each policy area?
 
-## Spent
-
-```{r}
-#| label: fig-policy-areas-expenditure
-#| fig-cap: !expr source
-
-allocation_topic_order <-
-  data_reordered %>%
-  summarise(allocation = sum(allocation, na.rm = TRUE), .by = "topic") %>%
-  arrange(desc(allocation)) %>%
-  distinct(topic) %>%
-  pull()
-
-data %>%
-  filter(geography == "Rochester") %>%
-  mutate(geography = paste0(geography, " City Spending")) %>%
-  summarise(spent = sum(spent, na.rm = TRUE), .by = c("topic", "geography")) %>%
-  mutate(total_spent = sum(spent), .by = "topic") %>%
-  mutate(topic = factor(topic, levels = rev(allocation_topic_order))) %>%
-  ggplot(aes(x = topic, y = spent, fill = geography)) +
-  geom_col() +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(spent)),
-    position = position_stack(vjust = 0.5),
-    # hjust = -0.1,
-    color = "white",
-    size = 4, fontface = "bold"
-  ) +
-  scale_y_continuous(
-    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
-    limits = c(0, 100 * 1e6)
-  ) +
-  scale_fill_manual(values = racf_palette[2]) +
-  coord_flip() +
-  labs(
-    x = NULL, y = "Total spent",
-    caption = "Note: Data on allocations spent were only available from the city of Rochester."
-  )
-```
-:::
-
-### What subtopics are funded within each policy area?
-
-The figure below provides a more detailed breakdown of allocations to each
-policy area. Each policy area tab breaks down the allocations into subtopics.
-For example, most of the money allocated to community and economic development
-has gone to workforce development.
+The figure below provides a more detailed breakdown of subtopic allocations
+within each policy area. For example, most of the money allocated to community
+and economic development has been allocated to workforce development. Click on
+each tab to see allocations toward subtopics within each policy area.
 
 ::: panel-tabset
 #### Community and Economic Development
 
 ```{r}
 #| fig-cap: !expr source
+
 data %>%
   filter(str_detect(topic, "Community and Economic Development")) %>%
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
   ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated)),
+  geom_col(width = 0.8) +
+  geom_text(aes(label = if_else(allocated > 1e6, scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated), "")),
     position = position_stack(vjust = 0.5),
     # hjust = -0.1,
     color = "white",
@@ -525,35 +312,7 @@ data %>%
     guide = guide_legend(reverse = TRUE)
   ) +
   scale_x_discrete(limits = rev) +
-  labs(x = NULL, y = "Total allocation")
-```
-
-#### Infrastructure
-
-```{r}
-#| fig-cap: !expr source
-data %>%
-  filter(str_detect(topic, "Infrastructure")) %>%
-  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
-  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated)),
-    position = position_stack(vjust = 0.5),
-    # hjust = -0.1,
-    color = "white",
-    size = 4, fontface = "bold"
-  ) +
-  scale_y_continuous(
-    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
-    limits = c(0, 50 * 1e6)
-  ) +
-  coord_flip() +
-  scale_fill_manual(
-    values = racf_palette[2],
-    guide = guide_legend(reverse = TRUE)
-  ) +
-  scale_x_discrete(limits = rev) +
-  labs(x = NULL, y = "Total allocation")
+  labs(x = NULL, y = "Total Allocation")
 ```
 
 #### Housing
@@ -564,8 +323,8 @@ data %>%
   filter(str_detect(topic, "Housing")) %>%
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
   ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated)),
+  geom_col(width = 0.8) +
+  geom_text(aes(label = if_else(allocated > 1e6, scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated), "")),
     position = position_stack(vjust = 0.5),
     # hjust = -0.1,
     color = "white",
@@ -581,92 +340,38 @@ data %>%
     guide = guide_legend(reverse = TRUE)
   ) +
   scale_x_discrete(limits = rev) +
-  labs(x = NULL, y = "Total allocation")
+  labs(x = NULL, y = "Total Allocation")
 ```
 
-#### Public Safety
+
+#### Infrastructure
 
 ```{r}
 #| fig-cap: !expr source
 data %>%
-  filter(str_detect(topic, "Public Safety")) %>%
+  filter(str_detect(topic, "Infrastructure")) %>%
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
   ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
-  scale_y_continuous(
-    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
-    limits = c(0, 50 * 1e6)
-  ) +
-  coord_flip() +
+  geom_col(width = 0.8) +
   geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated)),
     position = position_stack(vjust = 0.5),
     # hjust = -0.1,
     color = "white",
     size = 4, fontface = "bold"
   ) +
-  scale_fill_manual(
-    values = racf_palette,
-    guide = guide_legend(reverse = TRUE)
-  ) +
-  scale_x_discrete(limits = rev) +
-  labs(x = NULL, y = "Total allocation")
-```
-
-#### Social Services
-
-```{r}
-#| fig-cap: !expr source
-data %>%
-  filter(str_detect(topic, "Social Services")) %>%
-  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
-  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
   scale_y_continuous(
     labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
     limits = c(0, 50 * 1e6)
   ) +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated)),
-    position = position_stack(vjust = 0.5),
-    # hjust = -0.1,
-    color = "white",
-    size = 4, fontface = "bold"
-  ) +
   coord_flip() +
   scale_fill_manual(
-    values = racf_palette,
+    values = racf_palette[2],
     guide = guide_legend(reverse = TRUE)
   ) +
   scale_x_discrete(limits = rev) +
-  labs(x = NULL, y = "Total allocation")
+  labs(x = NULL, y = "Total Allocation")
 ```
 
-#### Public Health
-
-```{r}
-#| fig-cap: !expr source
-data %>%
-  filter(str_detect(topic, "Public Health")) %>%
-  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
-  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
-  scale_y_continuous(
-    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
-    limits = c(0, 50 * 1e6)
-  ) +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated)),
-    position = position_stack(vjust = 0.5),
-    # hjust = -0.1,
-    color = "white",
-    size = 4, fontface = "bold"
-  ) +
-  coord_flip() +
-  scale_fill_manual(
-    values = racf_palette,
-    guide = guide_legend(reverse = TRUE)
-  ) +
-  scale_x_discrete(limits = rev) +
-  labs(x = NULL, y = "Total allocation")
-```
 
 #### Operations
 
@@ -676,12 +381,12 @@ data %>%
   filter(str_detect(topic, "Operations")) %>%
   summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
   ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
-  geom_col() +
+  geom_col(width = 0.8) +
   scale_y_continuous(
     labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
     limits = c(0, 50 * 1e6)
   ) +
-  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated)),
+  geom_text(aes(label = if_else(allocated > 1e6, scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated), "")),
     position = position_stack(vjust = 0.5),
     # hjust = -0.1,
     color = "white",
@@ -693,50 +398,159 @@ data %>%
     values = racf_palette[2],
     guide = guide_legend(reverse = TRUE)
   ) +
-  labs(x = NULL, y = "Total allocation")
+  labs(x = NULL, y = "Total Allocation")
 ```
-:::
 
-### What does this look like in action?
-
-PLACEHOLDER TEXT
-
-## How much has been spent?
-
-The City of Rochester and Monroe County have allocated almost \$301M in SLFRF
-funds, and, of those, 14.6% have been reported as spent.
+#### Public Health
 
 ```{r}
-#| label: fig-pct-spent
-pct_spent <-
+#| fig-cap: !expr source
+data %>%
+  filter(str_detect(topic, "Public Health")) %>%
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col(width = 0.8) +
+  scale_y_continuous(
+    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
+    limits = c(0, 50 * 1e6)
+  ) +
+  geom_text(aes(label = if_else(allocated > 1e6, scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated), "")),
+    position = position_stack(vjust = 0.5),
+    # hjust = -0.1,
+    color = "white",
+    size = 4, fontface = "bold"
+  ) +
+  coord_flip() +
+  scale_fill_manual(
+    values = racf_palette,
+    guide = guide_legend(reverse = TRUE)
+  ) +
+  scale_x_discrete(limits = rev) +
+  labs(x = NULL, y = "Total Allocation")
+```
+
+#### Public Safety
+
+```{r}
+#| fig-cap: !expr source
+data %>%
+  filter(str_detect(topic, "Public Safety")) %>%
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col(width = 0.8) +
+  scale_y_continuous(
+    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
+    limits = c(0, 50 * 1e6)
+  ) +
+  coord_flip() +
+  geom_text(aes(label = if_else(allocated > 1e6, scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated), "")),
+    position = position_stack(vjust = 0.5),
+    # hjust = -0.1,
+    color = "white",
+    size = 4, fontface = "bold"
+  ) +
+  scale_fill_manual(
+    values = racf_palette,
+    guide = guide_legend(reverse = TRUE)
+  ) +
+  scale_x_discrete(limits = rev) +
+  labs(x = NULL, y = "Total Allocation")
+```
+
+#### Social Services
+
+```{r}
+#| fig-cap: !expr source
+data %>%
+  filter(str_detect(topic, "Social Services")) %>%
+  summarise(allocated = sum(allocation, na.rm = TRUE), .by = c("subtopic", "geography")) %>%
+  ggplot(aes(x = subtopic, y = allocated, fill = geography)) +
+  geom_col(width = 0.8) +
+  scale_y_continuous(
+    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
+    limits = c(0, 50 * 1e6)
+  ) +
+  geom_text(aes(label = if_else(allocated > 1e6, scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocated), "")),
+    position = position_stack(vjust = 0.5),
+    # hjust = -0.1,
+    color = "white",
+    size = 4, fontface = "bold"
+  ) +
+  coord_flip() +
+  scale_fill_manual(
+    values = racf_palette,
+    guide = guide_legend(reverse = TRUE)
+  ) +
+  scale_x_discrete(limits = rev) +
+  labs(x = NULL, y = "Total Allocation")
+```
+
+
+:::
+
+### *An Example*
+
+These investments are making a difference in people’s lives. For example,
+Gabrielle Smith, seen in the video below, received funding through the City of
+Rochester’s [Guaranteed Basic Income
+pilot](https://www.cityofrochester.gov/article.aspx?id=21474852387#:~:text=Program%20Overview&text=their%20households'%20needs.-,The%20guaranteed%20income%20pilot%20will%20provide%20monthly%20payments%20of%20%24500,the%20money%20can%20be%20used.)which
+fits into the social services policy area under cash assistance. This means that
+she received \$500 each month over 12 months. This helped her work toward her
+goals of buying a car so that she can help take her brand-new granddaughter to
+the places she needs to go, and to have more time to spend with her family
+without stressing about financial issues. Watch the short film below to hear
+stories of how these funds have affected people in Rochester.
+
+{{< video https://www.youtube.com/watch?v=-eZLNWHN78I >}}
+
+## How much is being spent on an inclusive recovery and equitable economy? {#sec-inclusive-recovery}
+
+By our estimation, **`r building_blocks_pct`** of city and county funding has
+been allocated towards the building blocks of an inclusive recovery and
+equitable economy.
+
+The figure below shows the total amount of funding for Rochester and Monroe
+County that was allocated to programs that align with these building blocks,
+based on review of the program description and goals.
+
+```{r}
+#| label: fg-pct-allocated-inclusive-recovery
+#| fig-cap: !expr source
+
+pct_allocated_inclusive_recovery_overall <-
   data |>
   summarise(
-    spent = sum(spent, na.rm = TRUE),
-    allocation = sum(allocation, na.rm = TRUE),
+    allocated = sum(allocation, na.rm = TRUE),
+    .by = c("building_block")
+  ) |>
+  mutate(geography = "Overall")
+
+pct_allocated_inclusive_recovery <-
+  data |>
+  summarise(
+    allocated = sum(allocation, na.rm = TRUE),
+    .by = c("building_block", "geography")
+  ) |>
+  full_join(pct_allocated_inclusive_recovery_overall, by = c("geography", "building_block", "allocated")) |>
+  mutate(
+    percentage = allocated / sum(allocated),
     .by = c("geography")
   ) |>
   mutate(
-    pct_spent = spent / sum(allocation),
-    pct_unspent = 1 - pct_spent,
-    .by = c("geography")
-  ) |>
-  pivot_longer(
-    cols = starts_with("pct"),
-    names_to = "spending_status",
-    values_to = "percentage"
-  ) |>
-  mutate(
-    spending_status = if_else(geography == "Monroe County", "Missing Data", spending_status),
-    spending_status = str_remove(spending_status, "pct_") |>
-      str_to_title() |> factor(levels = c("Missing Data", "Unspent", "Spent"))
-  ) |>
-  filter(percentage != 0)
+    geography = factor(geography,
+      levels = c("Monroe County", "Rochester", "Overall")
+    ),
+    building_block = if_else(building_block == "Building Block", "Inclusive Recovery and Equitable Economy", building_block),
+    building_block = factor(building_block,
+      levels = rev(c("Inclusive Recovery and Equitable Economy", "Other"))
+    ),
+    pct_label = scales::label_percent(accuracy = 1)(percentage)
+  )
 
-
-pct_spent |>
-  ggplot(aes(fill = spending_status, y = percentage, x = geography)) +
-  geom_bar(position = "fill", stat = "identity", na.rm = FALSE, width = 0.4) +
-  geom_text(aes(label = scales::label_percent(accuracy = 1)(percentage)),
+pct_allocated_inclusive_recovery |>
+  ggplot(aes(fill = building_block, y = percentage, x = geography)) +
+  geom_bar(position = "fill", stat = "identity", width = 0.5) +
+  geom_text(aes(label = pct_label),
     position = position_stack(vjust = 0.5),
     # hjust = -0.1,
     color = "white",
@@ -744,14 +558,15 @@ pct_spent |>
   ) +
   scale_y_continuous(labels = scales::percent_format()) +
   scale_fill_manual(
-    values = c(palette_urbn_gray[5], racf_palette[9], racf_palette[10]),
+    values = c(racf_palette[7], racf_palette[8]),
     guide = guide_legend(reverse = TRUE)
   ) +
   coord_flip() +
   labs(
     x = NULL, y = NULL,
-    caption = "Note: No data is available for Monroe County"
+    title = NULL
   ) +
+  guides(color = guide_legend(reverse = FALSE)) +
   theme(
     axis.title.x = element_blank(),
     axis.text.x = element_blank(),
@@ -760,7 +575,112 @@ pct_spent |>
   )
 ```
 
-### How does funding align with the Rochester Area Community Foundation's priorities?
+Out of the **`r building_blocks_pct`** of funds allocated to programs that align
+with the five building blocks of an inclusive recovery and equitable economy,
+the most funding has been allocated to reinvesting in disinvested communities
+while the least has been allocated to creating jobs for residents hardest hit by
+the pandemic or who face the greatest barriers to employment. The figure below
+shows how that funding is divided among the five building blocks and includes
+only the funds allocated to programs that align with the building blocks (the
+**`r building_blocks_pct`**). 
+
+```{r}
+#| label: calculate-building-blocks-allocation
+
+
+total_allocations <-
+  data %>%
+  summarise(total_allocation = sum(allocation, na.rm = TRUE), .by = "building_blocks") %>%
+  arrange(desc(total_allocation))
+
+data_reordered <-
+  data %>%
+  mutate(building_blocks = case_when(
+    str_detect(building_blocks, pattern = "Create jobs") ~ "Create jobs",
+    str_detect(building_blocks, "build wealth") ~ "Build wealth",
+    str_detect(building_blocks, "Stabilize housing") ~ "Stabilize housing",
+    .default = building_blocks
+  )) %>%
+  left_join(total_allocations, by = "building_blocks") %>%
+  mutate(building_blocks = reorder(building_blocks, total_allocation)) %>%
+  summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("building_blocks", "geography")) %>%
+  drop_na() %>%
+  mutate(total_allocation = sum(allocation), .by = "building_blocks") %>%
+  mutate(building_blocks = reorder(building_blocks, total_allocation)) |>
+  mutate(geography = factor(geography,
+    levels = c("Monroe County", "Rochester")
+  ))
+```
+
+```{r}
+#| label: fg-building-blocks-allocation
+#| fig-cap: !expr source
+
+data_reordered %>%
+  ggplot(aes(x = building_blocks, y = allocation, fill = geography)) +
+  geom_col(width = 0.8) +
+  geom_text(aes(label = scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocation)),
+    position = position_stack(vjust = 0.5),
+    # hjust = -0.1,
+    color = "white",
+    size = 4, fontface = "bold"
+  ) +
+  scale_y_continuous(
+    labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$"),
+    limits = c(0, 100 * 1e6),
+    breaks = seq(0, 100 * 1e6, by = 25 * 1e6)
+  ) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) +
+  coord_flip() +
+  scale_fill_manual(
+    values = racf_palette,
+    guide = guide_legend(reverse = TRUE)
+  ) +
+  labs(x = NULL, y = "Total Allocation")
+```
+
+### *How are other places spending their recovery dollars to increase equity?*
+
+[Dayton,
+Ohio](https://dayton-recovery-plan-daytonohio.hub.arcgis.com/apps/621c96849dae4536be9f84c4b1348d0d/explore)
+used a comprehensive community engagement process, including an online survey
+and series of public meetings, to inform its focus areas for ARPA spending. One
+of the areas identified was supporting Black- and Brown-owned businesses. This
+is one strategy that can [contribute to building
+wealth](https://www.aspeninstitute.org/publications/bridging-divide-business-ownership-can-help-close-racial-wealth-gap/)
+for people of color and help to close the racial wealth gap. To begin, the city
+undertook a comprehensive
+[review](https://www.daytonohio.gov/DocumentCenter/View/12678/RFP-22-020CMO-Supplement-A?bidId=)
+of the local business ecosystem to identify gaps in support. Based on this
+analysis, they created an [Inclusive Business Recovery Opportunity
+Center](https://www.youtube.com/watch?v=ivA56_BUI5A) to support the development,
+growth, and expansion of local businesses through coordination of services and
+capacity building. The city is also supporting Black- and Brown-owned businesses
+through a Micro-Grant Fund, a Racial Equity Fund, and Small Business Assistance.
+The city has [allocated \$7.7 million to these
+projects](https://dayton-recovery-plan-daytonohio.hub.arcgis.com/apps/621c96849dae4536be9f84c4b1348d0d/explore).  
+
+One business [supported by this
+funding](https://dayton-recovery-plan-daytonohio.hub.arcgis.com/pages/dayton-recovery-plan-project-highlights#sbb)
+is [6888 Kitchen Incubator](https://www.6888kitchen.org/) (pronounced 6 triple
+8), a commercial kitchen aiming to cultivate and support food entrepreneurs
+through business curriculum development, advanced mentoring, facilitation of
+business support, and a certified kitchen space for food preparation. Dayton’s
+ARPA funding supported 6888 Kitchen in capital equipment purchases to create the
+commercial kitchen space. The incubator
+[opened](https://www.daytondailynews.com/local/6888-kitchen-incubator-opens-first-phase-in-the-dayton-arcade-with-eight-small-businesses/TYMGEUDG4NAEJDAJZRGRPBD74Q/)
+in spring 2024 with eight food enterprises already on board. Dayton’s support of
+this woman, minority, veteran-owned business will in turn continue to support
+other local business efforts.
+
+> "Recognizing that there had been inequities in policies long ago and that the
+> inequities from those unjust policies were still continuing to affect
+> communities… This would be an opportunity to change those frameworks, right a
+> little bit of those wrongs, and put people on a pathway moving forward.” 
+>
+> \- LaShea Lofton, Deputy City Manager
+
+## How does funding align with the Rochester Area Community Foundation's priorities? {#sec-racf-focus-areas}
 
 ```{r racf-funding-pct}
 #| label: racf-funding-pct
@@ -776,32 +696,30 @@ allocated_to_racf_pct <-
   pull(pct)
 ```
 
-The Rochester Area Community Foundation's key priorities for investment in the
-region include:
+```{epoxy, .transformer = epoxy_transform_inline(.percent = scales::label_percent(accuracy = 1L))}
 
--   Closing the academic achievement and opportunity gap
-
--   Fostering racial and ethnic understanding and equity
-
--   Partnering against poverty
-
--   Supporting arts and culture
-
--   Preserving historic assets
-
--   Advancing environmental justice and sustainability
-
--   Promoting successful aging
-
-```{epoxy, .transformer = epoxy_transform_inline(.percent = scales::label_percent(accuracy = 0.1))}
-
-Overall, **{.pct allocated_to_racf_pct}** of SLFRF funding has been allocated towards these priority areas.
-
+Overall, **{.pct allocated_to_racf_pct}** of SLFRF funding has been allocated toward the Rochester Area Community Foundation's (RACF) priorities. These include:
 
 ```
 
+-   Closing the academic achievement and opportunity gap; 
+
+-   Fostering racial and ethnic understanding and equity; 
+
+-   Partnering against poverty; 
+
+-   Supporting arts and culture; 
+
+-   Preserving historic assets; 
+
+-   Advancing environmental justice and sustainability; and  
+
+-   Promoting successful aging.
+
 ```{r}
-#| label: fig-pct-allocated-racf-overall
+#| label: fg-pct-allocated-racf-overall
+#| fig-cap: !expr source
+
 pct_allocated_racf_overall <-
   data |>
   mutate(racf_category = if_else(is.na(racf_categories), "Other", "RACF Priority")) |>
@@ -859,9 +777,8 @@ poverty, followed by advancing environmental justice. Less well funded through
 SLFRF are preserving historical assets, promoting successful aging, and
 supporting arts and culture.
 
-
 ```{r}
-#| label: fig-pct-allocated-racf-by-geography
+#| label: plot-pct-allocated-racf-by-geography
 #| fig-cap: !expr source
 data %>%
   summarise(allocation = sum(allocation, na.rm = TRUE), .by = c("racf_categories", "geography")) %>%
@@ -869,7 +786,13 @@ data %>%
   mutate(total_allocation = sum(allocation), .by = "racf_categories") %>%
   mutate(racf_categories = reorder(racf_categories, total_allocation)) %>%
   ggplot(aes(x = racf_categories, y = allocation, fill = geography)) +
-  geom_col() +
+  geom_col(width = 0.8) +
+  geom_text(aes(label = if_else(allocation > 4e6, scales::label_number(scale = 1 / 1e6, suffix = "", prefix = "$", accuracy = 1)(allocation), "")),
+    position = position_stack(vjust = 0.5),
+    # hjust = -0.1,
+    color = "white",
+    size = 4, fontface = "bold"
+  ) +
   scale_y_continuous(labels = scales::label_number(scale = 1 / 1e6, suffix = "M", prefix = "$")) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) +
   scale_fill_manual(
@@ -880,17 +803,44 @@ data %>%
   labs(x = NULL, y = "Total Allocation")
 ```
 
-### An example: RENEW
+### ***An Example: Rochester Energy Efficiency and Weatherization***
 
-PLACEHOLDER TEXT
+![](/www/images/renew.png){fig-align="center" width="350"}
 
-## Which neighborhoods are the funds being spent in?
+Monroe County used 67% of their SLFRF ARPA funds to competitively fund community
+organizations and County departments that align with six focus areas: public
+safety, public health and wellness, economic recovery, workforce development,
+infrastructure improvements, and sustainability. One of the groups that received
+this funding is [Rochester ENergy Efficiency and
+Weatherization](https://www.racf.org/collaborations/rochester-energy-efficiency-and-weatherization/)
+(RENEW), a collective impact initiative in Rochester that helps income-qualified
+homeowners make their homes more energy-efficient, healthier, and safer from
+environmental hazards. RENEW [received \$850,000 of ARPA
+funds](https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments%20-%20OLIVET%20UPDATED.pdf)
+from Monroe County to fund its grants for repairs or replacements in community
+members’ homes, including work on insulation, furnaces, hot water heaters, and
+emergency health and safety repairs of sewer lines and electrical panels. Using
+these funds, RENEW will assist up to 200 income-qualified homeowners and up to
+800 residents living in those homes to complete projects that promote
+energy-efficiency, health, and/or safety goals.
+[Listen](https://www.wxxinews.org/show/connections/2023-10-04/how-to-make-energy-efficiency-projects-more-accessible-to-all-homeowners)
+to an episode of Connections to hear about RENEW’s impact in the community.
+
+> We’re hearing about the better physical and mental health impacts,
+> particularly the benefit of the mental health impacts in terms of being able
+> to have a home that is safe and healthy, and that you’re not worried about the
+> leak in the basement or the fact that your utility bill is too difficult to
+> pay.
+>
+> \- Elizabeth McDade, RENEW Director
+
+## Which neighborhoods are the funds being allocated to? {#sec-mapping}
 
 The map below shows how the City of Rochester’s SLFRF capital investments map
-onto racial characteristics of neighborhoods, as well as the original Federal
-redlining maps for the city. **Click on the tabs at the top to see how they
-overlap with the percent of residents who are Black in a neighborhood and the
-percent of residents who are Hispanic/Latino in a neighborhood.**
+onto original Federal redlining maps, as well as racial characteristics of
+neighborhoods. **Click on the tabs at the top to see how they overlap with the
+percent of residents who are Black in a neighborhood and the percent of
+residents who are Hispanic/Latino**[^We use the term “Hispanic/Latino” in this map because this is the term used in the data collected by the American Community Survey. We recognize that this may not be the preferred identifier for all, and we remain committed to employing inclusive language whenever possible.] **in a neighborhood.**
 
 [Redlining](https://www.npr.org/2017/05/03/526655831/a-forgotten-history-of-how-the-u-s-government-segregated-america)
 refers to the system that the Federal Housing Administration and the Home
@@ -903,25 +853,19 @@ neighborhoods received FHA home loans, whereas many Black and Hispanic/Latino
 neighborhoods were deemed hazardous and declining in value and did not receive
 FHA insured mortgages or loans. These maps [had long lasting
 effects](https://www.econstor.eu/bitstream/10419/200568/1/1010730592.pdf) on
-racial segregation, homeownership, and house values in redlined neighborhoods.
+racial segregation, homeownership, and house values in redlined neighborhoods. 
 
-__To increase equity in the region, leaders must focus investments in
-communities that have been underinvested in historically.__ These investments
-must be those that , meaning that they should not be investments that only
-benefit new, incoming wealthier residents, or those that have negative impacts
-on immediate neighbors, like a sewage treatment facility or a highway that
-pollutes the air. And, they must be investments that , particularly historically
-excluded members. The maps below give us a first approximation of how equitably
-investments are distributed. We encourage further exploration of how these
-investments align with the goals of community members and how much they benefit
-historically excluded residents.
+The maps below give us a first approximation of how equitably investments are
+distributed. We encourage further exploration of how these investments align
+with the goals of community members and how much they benefit historically
+excluded residents. 
 
 ::: panel-tabset
 ```{r}
 #| label: redlining-data-wrangling
 #|fig-cap: !expr redlining_source
 
-redlining_source <- glue::glue('Source: {tags$a("The Mapping Inequality Project", href = "https://dsl.richmond.edu/panorama/redlining/#loc=5/39.1/-94.58")} and ACS Data 2017-2021')
+redlining_source <- glue::glue('Source: {tags$a("The Mapping Inequality Project", href = "https://dsl.richmond.edu/panorama/redlining/#loc=5/39.1/-94.58")} and ACS Data 2017-2021.')
 
 redlining <-
   sf::read_sf("data/data-raw/redlining.geojson.txt") %>%
@@ -948,9 +892,11 @@ Sys.setenv(PROJ_LIB = "")
 project_locations <-
   read_csv("data/data-raw/addresses-geocoded.csv") %>%
   janitor::clean_names() %>%
-  filter(longitude != 0) |> 
-  st_as_sf(coords = c("longitude", "latitude"),
-           crs = 4326) |> 
+  filter(longitude != 0) |>
+  st_as_sf(
+    coords = c("longitude", "latitude"),
+    crs = 4326
+  ) |>
   st_transform(crs = 4326) %>%
   filter(type == "arpa_spending_status") %>%
   distinct(match_addr, .keep_all = TRUE) %>%
@@ -961,7 +907,7 @@ project_locations <-
     `ARPA Funding` = if_else(str_detect(match_addr, "873|Genesee"), genesee_spending$`ARPA Funding`, `ARPA Funding`),
     `Arpa funding numeric` = if_else(str_detect(match_addr, "873|Genesee"), genesee_spending$`Arpa funding numeric`, `Arpa funding numeric`)
   ) %>%
-  drop_na(`Project name`) |> 
+  drop_na(`Project name`) |>
   mutate(type = if_else(type == "arpa_spending_status", "City of Rochester Capital Projects", type))
 ```
 
@@ -1045,7 +991,6 @@ m <-
 
 m + project_location_map
 ```
-
 
 ```{r}
 #| eval: false
@@ -1157,13 +1102,25 @@ hispanic_map + project_location_map
 
 <br>
 
-### What does this look like?
+### **How might Rochester invest more into equity and inclusion?**
 
-HINGE EXAMPLE PLACEHOLDER TEXT
+Other places have found ways to use federal funds to invest in stabilizing
+housing, building wealth, and creating jobs—the building blocks of an inclusive
+recovery and equitable economy. For instance, the City of Boston is using ARPA
+funds to transform publicly-owned land into green, mixed income communities. One
+project in Chinatown, shown below, will include 83 affordable rental units and
+36 affordable homeownership units. The property is located in a walkable and
+bikeable neighborhood and will be energy efficient and follow the City of
+Boston’s Carbon Free, Climate Resilient, and Healthy Community goals. It was
+developed after extensive community engagement with nearby neighbors. To read
+more about this and other investments into the building blocks of an inclusive
+recovery and equitable economy, see this [research
+summary](https://www.urban.org/research/publication/building-blocks-equitable-local-economies)
+from the Urban Institute that highlights one example from each building block.
 
-![Source: XYZ](../www/images/example-data-story3.png)
+![](../www/images/example-data-story2.png){width="90%"}
 
-## Explore All Programs Funded {#programs-table}
+## Explore All Programs Funded {#sec-table}
 
 This table shows all programs that the City of Rochester and Monroe County have
 allocated SLFRF funds to, as well as their building block, policy area, policy
@@ -1171,11 +1128,9 @@ subtopic, and RACF priority area category. The default display on the table
 shows the programs in order from largest to smallest allocation. You can use the
 arrows next to each column title to sort the table by that column, and you can
 use the search bars under each column or the overall search bar to search the
-table.
+table. 
 
-**Note:** Data on spending were only available from the City of Rochester
-
-Data current as of: `r last_update_date`
+**Data current as of**: `r last_update_date`
 
 ```{r}
 #| label: "programs-table"
@@ -1185,11 +1140,10 @@ data %>%
     program,
     geography,
     allocated = allocation,
-    spent,
     building_blocks,
     policy_area = topic,
     subtopic,
-    racf_priority = racf_categories,
+    `RACF Priority` = racf_categories,
     description = program_description,
     agency,
   ) %>%
@@ -1198,6 +1152,7 @@ data %>%
   # mutate(topic = str_replace_all(topic, "; NA", "")) %>%
   gt() %>%
   cols_label_with(
+  columns = -`RACF Priority`,
     fn = ~ janitor::make_clean_names(., case = "title")
   ) |>
   tab_style(
@@ -1210,17 +1165,16 @@ data %>%
   ) %>%
   cols_width(
     program ~ px(250),
-    geography ~ px(115),
-    allocated ~ px(100),
-    spent ~ px(100),
-    building_blocks ~ px(110),
-    policy_area ~ px(110),
-    subtopic ~ px(110),
-    racf_priority ~ px(110),
+    geography ~ px(125),
+    allocated ~ px(115),
+    building_blocks ~ px(150),
+    policy_area ~ px(150),
+    subtopic ~ px(150),
+    `RACF Priority` ~ px(150),
     description ~ px(500),
     agency ~ px(180)
   ) %>%
-  fmt_number(c(allocated, spent), decimals = 2, scale_by = 1 / 1e6, pattern = "${x}M") %>%
+  fmt_number(c(allocated), decimals = 2, scale_by = 1 / 1e6, pattern = "${x}M") %>%
   tab_options(heading.padding = px(1)) %>%
   opt_interactive(
     use_resizers = TRUE,
@@ -1233,7 +1187,7 @@ data %>%
   ) %>%
   tab_options(
     heading.background.color = racf_palette[1],
-    table.width = px(900)
+    table.width = px(1200)
   )
 ```
 
@@ -1242,18 +1196,18 @@ data %>%
 ## About the Dashboard
 
 This dashboard was created by the [Urban Institute](https://www.urban.org/) in
-partnership with and support from ACT Rochester and [Rochester Area Community
-Foundation (RACF)](https://www.racf.org/) to visualize Monroe County and the
-City of Rochester's ARPA spending by the five building blocks of inclusive
-recovery, policy category, and RACF's investment priorities. By tracking
-recovery funding expenditures, this dashboard allows us to monitor public
-spending by the categories most critical in supporting an inclusive recovery
-from the COVID-19 pandemic.
+partnership with and support from [ACT Rochester](https://www.actrochester.org/)
+and [Rochester Area Community Foundation (RACF)](https://www.racf.org/) to
+visualize Monroe County and the City of Rochester’s ARPA allocations by the five
+building blocks of an inclusive recovery and equitable economy, policy category,
+and RACF’s investment priorities. By tracking recovery funding expenditures,
+this dashboard allows us to monitor public allocations by the categories most
+critical in supporting an inclusive recovery from the COVID-19 pandemic.
 
 ```{r}
 data %>%
   mutate(topic = str_replace_all(topic, "; NA", "")) %>%
-  select(program, program_description, geography, legislation, topic, building_blocks, racf_categories, allocation, spent, agency, source, source_url) %>%
+  select(program, program_description, geography, legislation, topic, building_blocks, racf_categories, allocation, agency, source, source_url) %>%
   downloadthis::download_this(
     output_name = "racf-dashboard-data",
     output_extension = ".csv",
@@ -1275,3 +1229,9 @@ Click For [Glossary of Terms](glossary.qmd)
 The code used to create this dashboard was writen by [Manuel Alcalá
 Kovalski](mailto:malcalakovalski@urban.org) and can be found on
 [GitHub](https://github.com/UI-Research/rochester-dashboard).
+
+[^1]: Simply allocating funds toward topics that could increase equity and
+    inclusion does not guarantee that they do so. Future research efforts should
+    closely monitor outcomes and impacts from the recovery dollar investments to
+    ensure that they close equity gaps exacerbated by the pandemic and address
+    the root causes of inequities.

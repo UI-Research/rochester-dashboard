@@ -11,36 +11,45 @@ website:
   navbar:
     search: true
     pinned: true
+    tools:
+      - icon: github
+        menu:
+          - text: Source Code
+            url:  https://github.com/UI-Research/rochester-dashboard
+          - text: Report a Bug
+            url:  https://github.com/UI-Research/rochester-dashboard/issues
     left:
       - text: "Federal Recovery Funds Dashboard"
         href: scripts/index.qmd
       - href: scripts/glossary.qmd
-  sidebar:
-      style: "floating"
-      background: light
-      collapse-level: 1
-      contents:
-        - scripts/index.qmd
 format:
   html:
     page-layout: full
     theme:
+      - litera
       - styles.scss
-    mainfont: montserrat
+    mainfont: Montserrat
     embed-resources: true
     code-fold: false
     code-link: true
     code-line-numbers: true
     df-print: default
-    toc: true
-    toc-title: Contents
-    toc-depth: 3
-    toc-location: left
+    toc: false
+    # toc-title: Contents
+    # toc-depth: 3
+    # toc-location: left
     highlight-style: github
     smooth-scroll: true
+    citations-hover: true
+    footnotes-hover: true
+crossref:
+  fig-title: ""
+  tbl-title: ""
+  title-delim: ""
 execute:
   freeze: auto
   echo: false
   message: false
   warning: false
   error: false
+lightbox: true
