@@ -29,13 +29,14 @@ $gray: #64605f;
 $dark-gray: #696B4F;
 $light-gray: #8FAEBE;
 
-
+// $body-bg: $cream
 /*-- scss:rules--*/
 
 /* -------------- Global Formats -------------------*/
 /* Sets the margin for paragraph elements */
 /* Define a mixin for font styling */
 /* Define a mixin for font styling */
+
 @mixin font-style($font-family, $font-size, $color, $font-weight: null) {
   font-family: $font-family;
   font-size: $font-size;
@@ -54,6 +55,7 @@ $light-gray: #8FAEBE;
   border: $border;
   border-radius: $border-radius;
 }
+
 
 /* Use the mixins in styles */
 p {
@@ -86,16 +88,15 @@ h3, h4, h5, h6 {
 /* nav-link: the text inside the tabs */
 /* tab-content: the content displayed when a tab is clicked */
 
-
 .navbar {
   display: block;
-  @include background-border-style($blue);
-  @include font-style($font-family-sans-serif, 80%, $cream, bold);
+  @include background-border-style($blue, 1px);
+  @include font-style($font-family-sans-serif, 90%, $cream, bold);
 }
+
 .navbar-nav {
   .nav-link {
     color: $cream;
-
     &:hover {
       color: lighten($yellow, 30%);
     }
@@ -113,24 +114,34 @@ h3, h4, h5, h6 {
   & > .nav-tabs > .tablist {
     display: inline-table;
     overflow-y: auto;
-    @include background-border-style($pink, '1px solid #ddd', '4px');
+    @include background-border-style($cream, '1px solid #ddd', '4px');
+    background-color: $cream;
+    color: $pink;
   }
 
   & > li > a:hover {
     @include background-border-style($cream, null, null);
-    color: $pink;
+    color: $cream;
+    background-color: lighten($pink, 30%);
   }
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  background-color: $pink;
+  color: $cream;
 }
 
 .color-tabs {
   & > .nav-pills > li:nth-of-type(1) {
     & > a {
-      @include background-border-style($cream, null, '8px !important');
+     //  @include background-border-style($pink, null, '8px !important');
+      // background-color: $cream;
       color: $pink;
     }
 
     & > a:hover, & > a:focus, &.active > a, &.active > a:hover, &.active > a:focus {
-      @include background-border-style($pink);
+     // @include background-border-style($pink);
+    //  background-color: $cream;
       color: $pink;
     }
   }
@@ -138,9 +149,9 @@ h3, h4, h5, h6 {
 
 /* Sets the text color for anchor tags with role attribute set to tab */
 a[role=tab] {
-  color: $pink; /* Sets the text color to a pink shade */
+  //background-color: $cream; /* Sets the text color to a pink shade */
+  color: $pink;
 }
-
 
 /* -------------- Misc Styling  -------------------*/
 
@@ -218,4 +229,56 @@ div.explore {
   justify-content: center;
   text-align: center;
   color: lighten($blue, 20%);
+}
+
+
+/* -------------- Download Button -------------------*/
+
+.button_large {
+  font-size: 20px;
+  font-family: $font-family-sans-serif;
+  background: $pink;
+}
+
+/* from https://ianlunn.github.io/Hover/ */
+.hvr-sweep-to-left {
+  font-size: 24px;
+  font-family: $font-family-sans-serif;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  position: relative;
+  -webkit-transition-property: color;
+  transition-property: color;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+.hvr-sweep-to-left:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $pink;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transform-origin: 100% 50%;
+  transform-origin: 100% 50%;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvr-sweep-to-left:hover, .hvr-sweep-to-left:focus, .hvr-sweep-to-left:active {
+  color: $cream;
+}
+.hvr-sweep-to-left:hover:before, .hvr-sweep-to-left:focus:before, .hvr-sweep-to-left:active:before {
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
 }
