@@ -33,10 +33,11 @@ librarian::shelf(
   htmltools,
   bslib,
   bsicons,
-  shiny,
   mccarthy - m - g / palettes,
   ggtext, 
-  rvest
+  rvest,
+  glue,
+  downloadthis
 )
 
 ragg_png <- function(..., res = 192) {
@@ -190,13 +191,16 @@ layout_column_wrap(
 This dashboard tracks data on how the City of Rochester and Monroe County have
 allocated [State and Local Fiscal Recovery Funds
 (SLFRF)](https://home.treasury.gov/policy-issues/coronavirus/assistance-for-state-local-and-tribal-governments/state-and-local-fiscal-recovery-funds#:~:text=The%20Coronavirus%20State%20and%20Local,COVID%2D19%20public%20health%20emergency)
-provided through the American Rescue Plan Act (ARPA). The federal government has
-transferred unprecedented levels of flexible relief funds to local governments
-to help them recover from the economic impacts of the COVID-19 pandemic and to
-move into longer term growth. As the City of Rochester and Monroe County
-[allocate and
+provided through the [American Rescue Plan Act
+(ARPA)](https://www.whitehouse.gov/american-rescue-plan/). The federal
+government has transferred unprecedented levels of flexible relief funds to
+local governments to help them recover from the economic impacts of the COVID-19
+pandemic and to move into longer-term growth. These funds grant a great deal of
+authority to municipal governments to decide how they should be spent, and they
+must be obligated by the end of 2024 and spent by the end of 2026. As the City
+of Rochester and Monroe County [allocate and
 spend](https://www.urban.org/sites/default/files/publication/105119/harnessing-federal-funds-for-inclusive-recovery-in-rochester-ny_0.pdf)
-these federal funds, they have [an
+these funds, they have [an
 opportunity](https://www.urban.org/research/publication/how-equity-helps-lift-all-boats)
 to not only stimulate economic growth, but to increase equity and remediate some
 of the past injustices that have been [built into our nation’s laws and
@@ -206,15 +210,13 @@ used](https://www.urban.org/research/publication/inclusive-recovery-us-cities)
 to ensure that everyone--especially historically excluded groups--can benefit
 from and contribute to economic growth.
 
-These funds grant a great deal of authority to municipal governments to decide
-how they should be spent, and they must be obligated by the end of 2024 and
-spent by the end of 2026. [Previous work by the Urban
+[Previous work by the Urban
 Institute](https://www.urban.org/sites/default/files/publication/105290/aligning-the-use-of-recovery-funds-with-community-goals-in-rochester-new-york.pdf)
 identified five building blocks of an inclusive recovery and equitable economy,
 shown below. These were identified based on empirical research and in
 collaboration with community leaders from across the country. We focus on how
-well these allocations align with the building blocks of an inclusive recovery
-and equitable economy.
+well Rochester and Monroe County’s SLFRF allocations align with the building
+blocks of an inclusive recovery and equitable economy.
 
 **The Building Blocks of An Inclusive Recovery and Equitable Economy**
 
@@ -225,25 +227,23 @@ country](../www/images/building-blocks.png){fig-align="center"}
 
 The dashboard is laid out as follows:
 
--   [How funds are being spent by policy area and subtopic](#sec-policy-areas)
--   [Alignment of allocations with Urban Institute’s building blocks of an
-    inclusive recovery and equitable economy](#sec-inclusive-recovery)
--   [Alignment of allocations with Rochester Area Community Foundation’s (RACF)
-    focus areas](#sec-racf-focus-areas)
--   [Mapping of the City of Rochester’s SLFRF capital investments onto original
-    redlining maps for the city and current racial characteristics of
-    neighborhoods](#sec-mapping)
+-   [Which policy areas are being funded?](#sec-policy-areas)
+-   [How much is allocated toward an inclusive recovery and equitable
+    economy?](#sec-inclusive-recovery)
+-   [How does funding align with Rochester Area Community Foundation’s
+    priorities?](#sec-racf-focus-areas)
+-   [Which neighborhoods are the funds allocated to?](#sec-mapping)
 -   [Detailed table of all allocations and their descriptions](#sec-table)
 
 **Note: This dashboard does not track outcomes from these investments – it only
 shows where the dollars are flowing**[^1].
 
-## What policy areas are being funded? {#sec-policy-areas}
+## Which policy areas are being funded? {#sec-policy-areas}
 
 The figure below shows how funding has been allocated across policy categories.
-Most of the funds have been allocated to Community and Economic Development,
-Infrastructure, and Housing, while the least have been allocated to Public
-Health and COVID-19 Response, Operations, and Public Safety. 
+Most of the funds have been allocated to community and economic development,
+infrastructure, and housing, while the least have been allocated to public
+health and COVID-19 response, operations, and public safety.
 
 ```{r}
 #| label: calculate-allocation-numbers
@@ -304,7 +304,7 @@ ggplot(data_reordered, aes(x = topic, y = allocation, fill = geography)) +
     theme(plot.caption=element_markdown())
 ```
 
-## What subtopics are funded within each policy area?
+### Which subtopics are funded within each policy area?
 
 The figure below provides a more detailed breakdown of subtopic allocations
 within each policy area. For example, most of the money allocated to community
@@ -369,7 +369,6 @@ data %>%
   labs(x = NULL, y = "Total Allocation")
 ```
 
-
 #### Infrastructure
 
 ```{r}
@@ -397,7 +396,6 @@ data %>%
   scale_x_discrete(limits = rev) +
   labs(x = NULL, y = "Total Allocation")
 ```
-
 
 #### Operations
 
@@ -510,8 +508,6 @@ data %>%
   scale_x_discrete(limits = rev) +
   labs(x = NULL, y = "Total Allocation")
 ```
-
-
 :::
 
 ### *An Example*
@@ -519,25 +515,23 @@ data %>%
 These investments are making a difference in people’s lives. For example,
 Gabrielle Smith, seen in the video below, received funding through the City of
 Rochester’s [Guaranteed Basic Income
-pilot](https://www.cityofrochester.gov/article.aspx?id=21474852387#:~:text=Program%20Overview&text=their%20households'%20needs.-,The%20guaranteed%20income%20pilot%20will%20provide%20monthly%20payments%20of%20%24500,the%20money%20can%20be%20used.)which
-fits into the social services policy area under cash assistance. This means that
-she received \$500 each month over 12 months. This helped her work toward her
-goals of buying a car so that she can help take her brand-new granddaughter to
-the places she needs to go, and to have more time to spend with her family
-without stressing about financial issues. Watch the short film below to hear
-stories of how these funds have affected people in Rochester.
+pilot](https://www.cityofrochester.gov/article.aspx?id=21474852387#:~:text=Program%20Overview&text=their%20households'%20needs.-,The%20guaranteed%20income%20pilot%20will%20provide%20monthly%20payments%20of%20%24500,the%20money%20can%20be%20used.)
+which fits into the social services policy area under cash assistance. This
+means that she received \$500 each month over 12 months. This helped her work
+toward her goals of buying a car so that she can help take her brand-new
+granddaughter to the places she needs to go, and to have more time to spend with
+her family without stressing about financial issues. Watch the short film below
+to hear stories of how these funds have affected people in Rochester.
 
 {{< video https://www.youtube.com/watch?v=-eZLNWHN78I >}}
 
-## How much is being spent on an inclusive recovery and equitable economy? {#sec-inclusive-recovery}
+## **How much is** **allocated toward an inclusive recovery and equitable economy?** {#sec-inclusive-recovery}
 
-By our estimation, **`r building_blocks_pct`** of city and county funding has
-been allocated towards the building blocks of an inclusive recovery and
-equitable economy.
-
-The figure below shows the total amount of funding for Rochester and Monroe
-County that was allocated to programs that align with these building blocks,
-based on review of the program description and goals.
+By our estimation, **`r building_blocks_pct`** of city and county SLFRF funding
+has been allocated toward the building blocks of an inclusive recovery and
+equitable economy. The figure below shows the total amount of funding for
+Rochester and Monroe County that was allocated to programs that align with these
+building blocks, based on review of the program description and goals.
 
 ```{r}
 #| label: fg-pct-allocated-inclusive-recovery
@@ -684,7 +678,7 @@ growth, and expansion of local businesses through coordination of services and
 capacity building. The city is also supporting Black- and Brown-owned businesses
 through a Micro-Grant Fund, a Racial Equity Fund, and Small Business Assistance.
 The city has [allocated \$7.7 million to these
-projects](https://dayton-recovery-plan-daytonohio.hub.arcgis.com/apps/621c96849dae4536be9f84c4b1348d0d/explore).  
+projects](https://dayton-recovery-plan-daytonohio.hub.arcgis.com/apps/621c96849dae4536be9f84c4b1348d0d/explore).
 
 One business [supported by this
 funding](https://dayton-recovery-plan-daytonohio.hub.arcgis.com/pages/dayton-recovery-plan-project-highlights#sbb)
@@ -738,7 +732,7 @@ Overall, **{.pct allocated_to_racf_pct}** of SLFRF funding has been allocated to
 
 -   Preserving historic assets; 
 
--   Advancing environmental justice and sustainability; and  
+-   Advancing environmental justice and sustainability; and
 
 -   Promoting successful aging.
 
@@ -833,15 +827,15 @@ data %>%
 
 ![](/www/images/renew.png){fig-align="center" width="350"}
 
-Monroe County used 67% of their SLFRF ARPA funds to competitively fund community
+Monroe County used 67% of their SLFRF funds to competitively fund community
 organizations and County departments that align with six focus areas: public
 safety, public health and wellness, economic recovery, workforce development,
 infrastructure improvements, and sustainability. One of the groups that received
-this funding is [Rochester ENergy Efficiency and
+this funding is [Rochester Energy Efficiency and
 Weatherization](https://www.racf.org/collaborations/rochester-energy-efficiency-and-weatherization/)
-(RENEW), a collective impact initiative in Rochester that helps income-qualified
-homeowners make their homes more energy-efficient, healthier, and safer from
-environmental hazards. RENEW [received \$850,000 of ARPA
+(RENEW), a collective impact initiative in Roche~~s~~ter that helps
+income-qualified homeowners make their homes more energy-efficient, healthier,
+and safer from environmental hazards. RENEW [received \$850,000 of SLFRF
 funds](https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments%20-%20OLIVET%20UPDATED.pdf)
 from Monroe County to fund its grants for repairs or replacements in community
 members’ homes, including work on insulation, furnaces, hot water heaters, and
@@ -850,23 +844,24 @@ these funds, RENEW will assist up to 200 income-qualified homeowners and up to
 800 residents living in those homes to complete projects that promote
 energy-efficiency, health, and/or safety goals.
 [Listen](https://www.wxxinews.org/show/connections/2023-10-04/how-to-make-energy-efficiency-projects-more-accessible-to-all-homeowners)
-to an episode of Connections to hear about RENEW’s impact in the community.
+to an episode of NPR’s Connections to hear about RENEW’s impact in the
+community.
 
-> We’re hearing about the better physical and mental health impacts,
+> "We’re hearing about the better physical and mental health impacts,
 > particularly the benefit of the mental health impacts in terms of being able
 > to have a home that is safe and healthy, and that you’re not worried about the
 > leak in the basement or the fact that your utility bill is too difficult to
-> pay.
+> pay."
 >
 > \- Elizabeth McDade, RENEW Director
 
-## Which neighborhoods are the funds being allocated to? {#sec-mapping}
+## Which neighborhoods are the funds allocated to? {#sec-mapping}
 
 The map below shows how the City of Rochester’s SLFRF capital investments map
 onto original Federal redlining maps, as well as racial characteristics of
 neighborhoods. **Click on the tabs at the top to see how they overlap with the
 percent of residents who are Black in a neighborhood and the percent of
-residents who are Hispanic/Latino**[^We use the term “Hispanic/Latino” in this map because this is the term used in the data collected by the American Community Survey. We recognize that this may not be the preferred identifier for all, and we remain committed to employing inclusive language whenever possible.] **in a neighborhood.**
+residents who are Hispanic/Latino** [^2] **in a neighborhood.**
 
 [Redlining](https://www.npr.org/2017/05/03/526655831/a-forgotten-history-of-how-the-u-s-government-segregated-america)
 refers to the system that the Federal Housing Administration and the Home
@@ -874,17 +869,17 @@ Owners’ Loan Corporation used to grade the profitability of neighborhoods in t
 late 1930s. The four categories were green (areas most desirable for lending
 purposes), blue (still desirable), yellow (declining), and red (the riskiest for
 mortgage support). These grades were largely based on the neighborhood’s racial,
-ethnic, socioeconomic, and religious composition. Generally, White, middle-class
+ethnic, socioeconomic, and religious composition. Generally, white, middle-class
 neighborhoods received FHA home loans, whereas many Black and Hispanic/Latino
 neighborhoods were deemed hazardous and declining in value and did not receive
 FHA insured mortgages or loans. These maps [had long lasting
 effects](https://www.econstor.eu/bitstream/10419/200568/1/1010730592.pdf) on
-racial segregation, homeownership, and house values in redlined neighborhoods. 
+racial segregation, homeownership, and house values in redlined neighborhoods.
 
 The maps below give us a first approximation of how equitably investments are
 distributed. We encourage further exploration of how these investments align
 with the goals of community members and how much they benefit historically
-excluded residents. 
+excluded residents.
 
 ::: panel-tabset
 ```{r}
@@ -960,15 +955,16 @@ race <- tidycensus::get_acs(
   st_filter(rochester, .predicate = st_intersects) %>%
   as_tibble() %>%
   janitor::clean_names() %>%
-  select(geoid, total_population = summary_est, race = variable, value = estimate, geometry) %>%
+  select(census_tract = geoid, total_population = summary_est, race = variable, value = estimate, geometry) %>%
   summarise(
     value = sum(value, na.rm = TRUE),
     percent = value / total_population,
-    .by = c("geoid", "race", "total_population", "geometry")
+    .by = c("census_tract", "race", "total_population", "geometry")
   ) %>%
   select(-c(total_population, value)) %>%
   pivot_wider(names_from = "race", values_from = "percent", names_prefix = "pct_") %>%
   sf::st_as_sf()
+
 ```
 
 ```{r}
@@ -1068,14 +1064,14 @@ m1
 ```{r pct-black-map}
 mapviewOptions(fgb = FALSE)
 black_map <-
-  mapview(select(race, geoid, pct_black),
+  mapview(select(race, census_tract, pct_black),
     zcol = "pct_black",
     layer.name = "Percent Black",
     label = scales::label_percent(accuracy = 1)(race$pct_black),
     col.regions = colorRampPalette(palette_urbn_cyan),
     popup = popupTable(
       select(race %>% st_drop_geometry(),
-        geoid,
+        `Census Tract` = census_tract,
         `Percent Black` = pct_black
       ) %>%
         mutate(`Percent Black` = scales::label_percent(accuracy = 0.1)(`Percent Black`)),
@@ -1099,14 +1095,14 @@ black_map + project_location_map
 ```{r pct-hispanic-map}
 mapviewOptions(fgb = FALSE)
 hispanic_map <-
-  mapview(select(race, geoid, pct_hispanic),
+    mapview(select(race, census_tract, pct_hispanic),
     zcol = "pct_hispanic",
     label = scales::label_percent(accuracy = 1)(race$pct_hispanic),
     layer.name = "Percent Hispanic or Latino",
     col.regions = colorRampPalette(palette_urbn_green),
     popup = popupTable(
       select(race %>% st_drop_geometry(),
-        geoid,
+        `Census Tract` = census_tract,
         `Percent Hispanic/Latino` = pct_hispanic
       ) %>%
         mutate(`Percent Hispanic/Latino` = scales::label_percent(accuracy = 0.1)(`Percent Hispanic/Latino`)),
@@ -1123,24 +1119,23 @@ hispanic_map <-
   )
 
 hispanic_map + project_location_map
+
 ```
 :::
 
-<br>
+### ***How might Rochester invest more into equity and inclusion?***
 
-### **How might Rochester invest more into equity and inclusion?**
-
-Other places have found ways to use federal funds to invest in stabilizing
-housing, building wealth, and creating jobs—the building blocks of an inclusive
-recovery and equitable economy. For instance, the City of Boston is using ARPA
-funds to transform publicly-owned land into green, mixed income communities. One
-project in Chinatown, shown below, will include 83 affordable rental units and
-36 affordable homeownership units. The property is located in a walkable and
-bikeable neighborhood and will be energy efficient and follow the City of
-Boston’s Carbon Free, Climate Resilient, and Healthy Community goals. It was
-developed after extensive community engagement with nearby neighbors. To read
-more about this and other investments into the building blocks of an inclusive
-recovery and equitable economy, see this [research
+Other places have found ways to use federal funds to invest in the building
+blocks of an inclusive recovery and equitable economy. For instance, the City of
+Boston is using ARPA funds to transform publicly-owned land into green, mixed
+income communities. One project in Chinatown, shown below, will include 83
+affordable rental units and 36 affordable homeownership units. The property is
+located in a walkable and bikeable neighborhood and will be energy efficient and
+follow the City of Boston’s Carbon Free, Climate Resilient, and Healthy
+Community goals. It was developed after extensive community engagement with
+nearby neighbors. To read more about this and other investments into the
+building blocks of an inclusive recovery and equitable economy, see this
+[research
 summary](https://www.urban.org/research/publication/building-blocks-equitable-local-economies)
 from the Urban Institute that highlights one example from each building block.
 
@@ -1148,25 +1143,28 @@ from the Urban Institute that highlights one example from each building block.
 
 ## Explore All Programs Funded {#sec-table}
 
-This table shows all programs that the City of Rochester and Monroe County have
-allocated SLFRF funds to, as well as their building block, policy area, policy
-subtopic, and RACF priority area category. The default display on the table
-shows the programs in order from largest to smallest allocation. You can use the
-arrows next to each column title to sort the table by that column, and you can
-use the search bars under each column or the overall search bar to search the
-table. 
+The table below shows all programs that the City of Rochester and Monroe County
+have allocated SLFRF funds to, as well as their building block, policy area,
+policy subtopic, and RACF priority area category. The default display on the
+table shows the programs in order from largest to smallest allocation. You can
+use the arrows next to each column title to sort the table by that column, and
+you can use the search bars under each column or the overall search bar to
+search the table.
 
 **Data current as of**: `r last_update_date`
 
 ```{r}
 #| label: "programs-table"
+#| column: screen
+#| out-width: 100%
+
 data %>%
   # Should subtopic be included?
   select(
     program,
     geography,
     allocated = allocation,
-    building_blocks,
+    building_block = building_blocks,
     policy_area = topic,
     subtopic,
     `RACF Priority` = racf_categories,
@@ -1174,8 +1172,6 @@ data %>%
     agency,
   ) %>%
   arrange(desc(allocated)) %>%
-  # unite(col = "topic", c(topic, building_blocks, racf_categories), sep = '; ') %>%
-  # mutate(topic = str_replace_all(topic, "; NA", "")) %>%
   gt() %>%
   cols_label_with(
   columns = -`RACF Priority`,
@@ -1193,11 +1189,11 @@ data %>%
     program ~ px(250),
     geography ~ px(125),
     allocated ~ px(115),
-    building_blocks ~ px(150),
+    building_block ~ px(150),
     policy_area ~ px(150),
     subtopic ~ px(150),
     `RACF Priority` ~ px(150),
-    description ~ px(500),
+    description ~ px(700),
     agency ~ px(180)
   ) %>%
   fmt_number(c(allocated), decimals = 2, scale_by = 1 / 1e6, pattern = "${x}M") %>%
@@ -1215,44 +1211,46 @@ data %>%
     heading.background.color = racf_palette[1],
     table.width = px(1200)
   )
-```
 
-<br>
+```
 
 ## About the Dashboard
 
-This dashboard was created by the [Urban Institute](https://www.urban.org/) in
-partnership with and support from [ACT Rochester](https://www.actrochester.org/)
-and [Rochester Area Community Foundation (RACF)](https://www.racf.org/) to
-visualize Monroe County and the City of Rochester’s ARPA allocations by the five
-building blocks of an inclusive recovery and equitable economy, policy category,
-and RACF’s investment priorities. By tracking recovery funding expenditures,
-this dashboard allows us to monitor public allocations by the categories most
-critical in supporting an inclusive recovery from the COVID-19 pandemic.
+This dashboard was created by the Urban Institute in partnership with and
+support from [ACT Rochester](https://www.actrochester.org/) and Rochester Area
+Community Foundation (RACF) to visualize Monroe County and the City of
+Rochester’s SLFRF allocations by the five building blocks of an inclusive
+recovery, policy category, and RACF’s investment priorities. By tracking
+recovery funding expenditures, this dashboard allows us to monitor public
+allocations by the categories most critical in supporting an inclusive recovery
+from the COVID-19 pandemic.
 
 ```{r}
-data %>%
+data_to_download <-
+  data %>%
   mutate(topic = str_replace_all(topic, "; NA", "")) %>%
-  select(program, program_description, geography, legislation, topic, building_blocks, racf_categories, allocation, agency, source, source_url) %>%
-  downloadthis::download_this(
+  select(program, program_description, geography, legislation, topic, building_blocks, racf_categories, allocation, agency, source, source_url) 
+
+
+  data_to_download |> 
+    download_this(
     output_name = "racf-dashboard-data",
     output_extension = ".csv",
     button_label = "Download all the data used in the dashboard (.csv)",
     button_type = "success",
     has_icon = TRUE,
-    icon = "fa fa-save"
+    icon = "fa fa-save",
+    csv2 = FALSE,
+    class = "button-large"
   )
-```
 
-<br>
+```
 
 For more information about the dashboard, please contact [Meg
 Norris](mailto:mnorris@racf.org) (ACT Rochester) or [Christina
 Stacy](mailto:cstacy@urban.org) (Urban Institute).
 
-Click For [Glossary of Terms](glossary.qmd)
-
-The code used to create this dashboard was writen by [Manuel Alcalá
+The code used to create this dashboard was written by [Manuel Alcalá
 Kovalski](mailto:malcalakovalski@urban.org) and can be found on
 [GitHub](https://github.com/UI-Research/rochester-dashboard).
 
@@ -1261,3 +1259,8 @@ Kovalski](mailto:malcalakovalski@urban.org) and can be found on
     closely monitor outcomes and impacts from the recovery dollar investments to
     ensure that they close equity gaps exacerbated by the pandemic and address
     the root causes of inequities.
+
+[^2]: We use the term “Hispanic/Latino” in this map because this is the term
+    used in the data collected by the American Community Survey. We recognize
+    that this may not be the preferred identifier for all, and we remain
+    committed to employing inclusive language whenever possible.

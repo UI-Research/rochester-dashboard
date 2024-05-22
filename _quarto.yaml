@@ -4,7 +4,6 @@ project:
   execute-dir: project
   render:
     - scripts/index.qmd
-    - scripts/glossary.qmd
 website:
   title: ""
   page-navigation: true
@@ -21,7 +20,6 @@ website:
     left:
       - text: "Federal Recovery Funds Dashboard"
         href: scripts/index.qmd
-      - href: scripts/glossary.qmd
 format:
   html:
     page-layout: full
