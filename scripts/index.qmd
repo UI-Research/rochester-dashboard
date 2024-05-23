@@ -833,9 +833,9 @@ safety, public health and wellness, economic recovery, workforce development,
 infrastructure improvements, and sustainability. One of the groups that received
 this funding is [Rochester Energy Efficiency and
 Weatherization](https://www.racf.org/collaborations/rochester-energy-efficiency-and-weatherization/)
-(RENEW), a collective impact initiative in Roche~~s~~ter that helps
-income-qualified homeowners make their homes more energy-efficient, healthier,
-and safer from environmental hazards. RENEW [received \$850,000 of SLFRF
+(RENEW), a collective impact initiative in Rochester that helps income-qualified
+homeowners make their homes more energy-efficient, healthier, and safer from
+environmental hazards. RENEW [received \$850,000 of SLFRF
 funds](https://www.monroecounty.gov/files/planning/arpa/July_2023_ARPA_Report_V3_8-22-23_With_Attachments%20-%20OLIVET%20UPDATED.pdf)
 from Monroe County to fund its grants for repairs or replacements in community
 members’ homes, including work on insulation, furnaces, hot water heaters, and
@@ -1155,8 +1155,6 @@ search the table.
 
 ```{r}
 #| label: "programs-table"
-#| column: screen
-#| out-width: 100%
 
 data %>%
   # Should subtopic be included?
